@@ -1,5 +1,5 @@
 import {config} from "./config.js";
-import {start} from "./start.js";
+import {start, setup} from "./start.js";
 
 //Aliases
 export const    Application = PIXI.Application,
@@ -28,7 +28,7 @@ window.onload = function(){
         transparent: false,             // default: false
         roundPixels: true,
         resolution: 1,
-        backgroundColor: 0x2980b9,
+        backgroundColor: 0x4cc0cd,
         autoResize: true
     });
 
@@ -36,6 +36,8 @@ window.onload = function(){
 
     //Add the canvas that Pixi automatically created for you to the HTML document
     config.element.appendChild(app.view);
+
+    const scene = new Container();
 
     // // create viewport
     // viewport = new pixi_viewport.Viewport({
@@ -47,26 +49,20 @@ window.onload = function(){
     //     interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
     // })
     //
+    //
     // // activate plugins
     // viewport
-    //     .drag()
-    //     .pinch()
-    //     .wheel()
+    //     .drag({wheel: false})
+    //     // .mouseEdges({radius: 500, right: 10})
     //     .decelerate()
-    //
-    // // add a red box
-    // const sprite = viewport.addChild(new PIXI.Sprite(PIXI.Texture.WHITE))
-    // sprite.tint = 0xff0000
-    // sprite.width = sprite.height = 100
-    // sprite.position.set(100, 100)
-    //
-    // // add the viewport to the stage
+
+    // add the viewport to the stage
     // app.stage.addChild(viewport)
 
     //Load an image and run the `setup` function when it's done
     loader
         .add("images/atlas.json")
-        .load()
+        .load(setup)
         .onComplete.add(start)
 }
 

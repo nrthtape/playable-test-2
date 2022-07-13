@@ -1,21 +1,5 @@
 import {app, viewport, resources, Sprite} from "./app.js";
 
-const spritesSetup = [
-    {name: "cat"}
-]
-
-//Add sprite by name and return
-export function getSpriteByName(name){
-
-    for (let i = 0; i < spritesSetup.length; i++){
-
-        if (spritesSetup[i].name === name){
-
-            return getSpriteByConfig(spritesSetup[i]);
-        }
-    }
-}
-
 //Add sprite by config and return
 export function getSpriteByConfig(config){
 
@@ -38,4 +22,12 @@ export function getSpriteByConfig(config){
     config.parent.addChild(sprite);
 
     return sprite;
+}
+
+export class Layer {
+
+    constructor(config){
+
+        this.sprite = getSpriteByConfig(config);
+    }
 }

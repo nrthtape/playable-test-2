@@ -1,5 +1,6 @@
 import {app, viewport} from "./app.js";
 import {config} from "./config.js";
+import {cat} from "./start.js";
 
 //Fits game content to the browser window
 export function resizeGame(){
