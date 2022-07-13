@@ -1,19 +1,18 @@
-import {app, viewport, tweenManager, Container} from "./app.js";
+import {app, Display, scene, tweenManager} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
-
-// app.stage.addChild(city);
 
 //Declare variables for images
 export let  cat,
             road_tile, road_tile_v
 
+
 //Setup images and add them to stage
 export function setup(){
 
-    cat = getSpriteByConfig({name: "cat"});
+    cat = getSpriteByConfig({name: "cat", parent: scene});
 
-    road_tile = getSpriteByConfig({name: "road_tile", position: [200, 200]});
+    road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
 }
 
 //This function will run when the image has loaded
@@ -21,27 +20,34 @@ export function start(){
 
     resizeGame();
 
-    app.stage.interactive = true;
+    subscribe(scene);
 
-    app.stage.on("pointerdown", function(e){
-        app.stage.x = e.data.global.x;
-        app.stage.y = e.data.global.y;
-        app.stage.dragging = true;
+    // app.view.interactive = true;
+    //
+    // app.view.on("mouseover", function (){
+    //
+    //     app.view.on('pointerdown', function (data) {
+    //         app.view.dragging = true;
+    //         onPointerDown(data);
+    //     });
+    //
+    //     app.view.on('pointermove', function (data) {
+    //         if (app.view.dragging){
+    //
+    //             onPointerDown(data);
+    //         }
+    //     });
+    //
+    //     app.view.on('pointerup', function () {
+    //         app.view.dragging = false;
+    //     });
+    // });
 
-    })
-
-    app.stage.on("pointermove", function(e){
-        if (app.stage.dragging) {
-            app.stage.x = e.data.global.x;
-            app.stage.y = e.data.global.y;
-        }
-    })
-
-    app.stage.on("pointerup", function(e) {
-        app.stage.x = e.data.global.x;
-        app.stage.y = e.data.global.y;
-        app.stage.dragging = false;
-    })
+    // app.view.on("pointerup", function(e) {
+    //     app.view.x = e.data.global.x;
+    //     app.view.y = e.data.global.y;
+    //     app.view.dragging = false;
+    // })
 
     app.ticker.add(gameLoop);
 }
@@ -98,6 +104,58 @@ function vacuum(source, target){
 
 const onPointerDown = ({data}) => {
 
-    const pos = data.getLocalPosition(app.stage);
+    const pos = data.getLocalPosition(app.view);
     console.log(pos);
+}
+
+// const dragGroup = new Display.Group(0, true);
+// dragged objects has to processed after sorted, so we need a flag here too
+// dragGroup.sortPriority = 1;
+// app.stage.addChild(new Display.Layer(dragGroup));
+
+// / === DRAG ZONE ===
+function subscribe(obj) {
+    obj.interactive = true;
+    obj.on('mousedown', onDragStart)
+        .on('touchstart', onDragStart)
+        .on('mouseup', onDragEnd)
+        .on('mouseupoutside', onDragEnd)
+        .on('touchend', onDragEnd)
+        .on('touchendoutside', onDragEnd)
+        .on('mousemove', onDragMove)
+        .on('touchmove', onDragMove);
+}
+
+function onDragStart(event) {
+    if (!this.dragging) {
+        this.data = event.data;
+        // this.oldGroup = this.parentGroup;
+        // this.parentGroup = dragGroup;
+        this.dragging = true;
+
+        // this.scale.x *= 1.1;
+        // this.scale.y *= 1.1;
+        this.dragPoint = event.data.getLocalPosition(this.parent);
+        this.dragPoint.x -= this.x;
+        this.dragPoint.y -= this.y;
+    }
+}
+
+function onDragEnd() {
+    if (this.dragging) {
+        this.dragging = false;
+        // this.parentGroup = this.oldGroup;
+        // this.scale.x /= 1.1;
+        // this.scale.y /= 1.1;
+        // set the interaction data to null
+        this.data = null;
+    }
+}
+
+function onDragMove() {
+    if (this.dragging) {
+        const newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x - this.dragPoint.x;
+        this.y = newPosition.y - this.dragPoint.y;
+    }
 }
