@@ -1,10 +1,10 @@
-import {app, Display, scene, camera, tweenManager} from "./app.js";
+import {app, Graphics, Display, scene, camera, tweenManager} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
-export let  cat,
+export let  cat, catMask,
             road_tile
 
 
@@ -12,6 +12,15 @@ export let  cat,
 export function setup(){
 
     cat = getSpriteByConfig({name: "cat", parent: scene});
+
+    catMask = new Graphics()
+        .beginFill(0xff0000, 1)
+        // .drawRoundedRect(-80, -60, 160, 100, 100)
+        .drawCircle(0, -15, 60)
+        .endFill()
+    catMask.width *= 1.5;
+    catMask.visible = false;
+    cat.addChild(catMask);
 
     road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
 }
@@ -27,6 +36,8 @@ export function start(){
 }
 
 let dist;
+
+let trigger = false;
 
 let dragAngle = 0, dragSpeed = 0, offsetX = 0, offsetY = 0;
 
@@ -58,20 +69,31 @@ export function gameLoop(delta){
             offsetY = 0;
         }
 
-        console.log(cat.x);
-
         scene.x -= dragSpeed * Math.cos(dragAngle) + offsetX;
         scene.y -= dragSpeed * Math.sin(dragAngle) + offsetY;
         cat.x += dragSpeed * Math.cos(dragAngle) + offsetX;
         cat.y += dragSpeed * Math.sin(dragAngle) + offsetY;
     }
 
-    console.log(scene.x > config.worldWidth / 2);
+    // console.log(scene.x > config.worldWidth / 2);
 
-    if (rectIntersect(road_tile, cat)){
 
-        // vacuum(road_tile, cat).start();
-    }
+    vacuum(road_tile, cat, 500);
+
+
+    // if (rectIntersect(road_tile, cat)) {
+    //
+    //     if (!trigger) {
+    //         trigger = true;
+    //     }
+    // }
+
+    // console.log(trigger);
+
+    // if (trigger){
+    //
+    //     vacuum(road_tile, cat);
+    // }
 
     tweenManager.update();
 }
@@ -81,46 +103,65 @@ window.onresize = function(){
     resizeGame();
 }
 
+// Проверка, пересекаются ли объекты
 function rectIntersect(a, b){
 
     let aBox = a.getBounds();
     let bBox = b.getBounds();
 
-    return  aBox.x + 100 + aBox.width > bBox.x &&
-            aBox.x + 100 < bBox.x + bBox.width &&
-            aBox.y + 100 + aBox.height > bBox.y &&
-            aBox.y + 100 < bBox.y + bBox.height;
+    return  aBox.x + aBox.width > bBox.x &&
+            aBox.x < bBox.x + bBox.width &&
+            aBox.y + aBox.height > bBox.y &&
+            aBox.y < bBox.y + bBox.height;
 }
 
-function getWorldPosition(layer){
+// Get distance between two points
+function getDistance(p1, p2) {
 
-    let x = layer.getBounds().x;
-    let y = layer.getBounds().y;
+    const a = p1.x - p2.x;
+    const b = p1.y - p2.y;
 
-    return [x, y];
+    return Math.hypot(a, b);
 }
 
-function vacuum(source, target){
+function vacuum(source, target, triggerDistance){;
 
-    const   vacuum = tweenManager.createTween(source);
+    let speed = 0;
 
-            vacuum.to({x: target.x, y: target.y, width: source.width - source.width, height: source.height - source.height});
-            vacuum.time = 300;
-            // vacuum.to({width: source.width - source.width, height: source.height - source.height});
+    let dist = getDistance(source, target);
 
-    return vacuum;
+    if (dist < 700) {
+
+        speed = 0.05
+
+        if (rectIntersect(source, target.children[0])) {
+
+            // target.children[0].visible = true;
+            // source.mask = target.children[0];
+            speed = 0.25
+        }
+    }
+
+    source.x = lerp(source.x, target.x, speed);
+    source.y = lerp(source.y, target.y + 10, speed);
+
+    console.log(dist);
+
+    if (rectIntersect(source, target.children[0])){
+
+        if (source.width > 0){
+
+
+            source.width -= source.width / 10;
+            source.height -= source.height / 10;
+        }
+        else{
+
+            // source.parent.removeChild(source);
+            source.visible = false;
+        }
+    }
 }
-
-const onPointerDown = ({data}) => {
-
-    const pos = data.getLocalPosition(scene);
-    console.log(pos);
-}
-
-// const dragGroup = new Display.Group(0, true);
-// dragged objects has to processed after sorted, so we need a flag here too
-// dragGroup.sortPriority = 1;
-// app.stage.addChild(new Display.Layer(dragGroup));
 
 // / === DRAG ZONE ===
 function subscribe(obj) {
@@ -164,11 +205,28 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 10;
+        const maxDiff = 300;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         dragAngle = Math.atan2(yDiff, xDiff);
-        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
+        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
+
+        // Смещение точки нажатия для более удобного управления
+        this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
+        this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
+
+        // Проверка смещения точки нажатия
+        // this.addChild(
+        //     new Graphics()
+        //         .beginFill(0xff0000, 1)
+        //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
+        //         .endFill()
+        //
+        // );
     }
+}
+
+function lerp(a, b, n) {
+    return (1 - n) * a + n * b;
 }
