@@ -38,7 +38,6 @@ export function gameLoop(delta){
         // if (scene.x > config.worldWidth / 2){
         //     dragSpeed = 0;
         // }
-
             scene.x -= dragSpeed * Math.cos(dragAngle);
             scene.y -= dragSpeed * Math.sin(dragAngle);
             cat.x += dragSpeed * Math.cos(dragAngle);
