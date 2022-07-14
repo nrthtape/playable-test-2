@@ -21,11 +21,7 @@ export function start(){
 
     resizeGame();
 
-    camera.interactive = true;
-    camera.on('pointerdown', onDragStart)
-        .on('pointerup', onDragEnd)
-        .on('pointeroutside', onDragEnd)
-        .on('pointermove', onDragMove);
+    subscribe(camera);
 
     app.ticker.add(gameLoop);
 }
@@ -135,6 +131,17 @@ function vacuum(source, target){;
 }
 
 // / === DRAG ZONE ===
+function subscribe(obj) {
+    obj.interactive = true;
+    obj.on('mousedown', onDragStart)
+        .on('touchstart', onDragStart)
+        .on('mouseup', onDragEnd)
+        .on('mouseupoutside', onDragEnd)
+        .on('touchend', onDragEnd)
+        .on('touchendoutside', onDragEnd)
+        .on('mousemove', onDragMove)
+        .on('touchmove', onDragMove);
+}
 
 function onDragStart(event) {
 
@@ -173,8 +180,8 @@ function onDragMove() {
         dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
 
         // Смещение точки нажатия для более удобного управления
-        this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
-        this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
+        // this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
+        // this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
 
         // Проверка смещения точки нажатия
         // this.addChild(
