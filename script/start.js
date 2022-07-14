@@ -21,7 +21,11 @@ export function start(){
 
     resizeGame();
 
-    subscribe(camera);
+    camera.interactive = true;
+    camera.on('pointerdown', onDragStart)
+        .on('pointerup', onDragEnd)
+        .on('pointeroutside', onDragEnd)
+        .on('pointermove', onDragMove);
 
     app.ticker.add(gameLoop);
 }
@@ -131,17 +135,6 @@ function vacuum(source, target){;
 }
 
 // / === DRAG ZONE ===
-function subscribe(obj) {
-    obj.interactive = true;
-    obj.on('mousedown', onDragStart)
-        .on('touchstart', onDragStart)
-        .on('mouseup', onDragEnd)
-        .on('mouseupoutside', onDragEnd)
-        .on('touchend', onDragEnd)
-        .on('touchendoutside', onDragEnd)
-        .on('mousemove', onDragMove)
-        .on('touchmove', onDragMove);
-}
 
 function onDragStart(event) {
 
