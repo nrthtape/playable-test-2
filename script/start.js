@@ -121,8 +121,8 @@ function vacuum(source, target, trigger){;
 
         if (rectIntersect(source, target)){
 
-            target.children[0].visible = true;
-            source.mask = target.children[0];
+            // target.children[0].visible = true;
+            // source.mask = target.children[0];
             speed = 0.25
         }
     }
@@ -188,12 +188,12 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 300;
+        const maxDiff = 10;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         dragAngle = Math.atan2(yDiff, xDiff);
-        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
+        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
 
         // Смещение точки нажатия для более удобного управления
         this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
