@@ -180,8 +180,8 @@ function onDragMove() {
         dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
 
         // Смещение точки нажатия для более удобного управления
-        // this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
-        // this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
+        this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 3;
+        this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 3;
 
         // Проверка смещения точки нажатия
         this.addChild(
