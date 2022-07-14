@@ -184,13 +184,13 @@ function onDragMove() {
         // this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
 
         // Проверка смещения точки нажатия
-        // this.addChild(
-        //     new Graphics()
-        //         .beginFill(0xff0000, 1)
-        //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
-        //         .endFill()
-        //
-        // );
+        this.addChild(
+            new Graphics()
+                .beginFill(0xff0000, 1)
+                .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
+                .endFill()
+
+        );
     }
 }
 
