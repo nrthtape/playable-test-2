@@ -188,25 +188,25 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 10;
+        const maxDiff = 300;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         dragAngle = Math.atan2(yDiff, xDiff);
-        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
+        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
 
         // Смещение точки нажатия для более удобного управления
         this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 2;
         this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
 
         // Проверка смещения точки нажатия
-        // this.addChild(
-        //     new Graphics()
-        //         .beginFill(0xff0000, 1)
-        //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
-        //         .endFill()
-        //
-        // );
+        this.addChild(
+            new Graphics()
+                .beginFill(0xff0000, 1)
+                .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
+                .endFill()
+
+        );
     }
 }
 
