@@ -1,11 +1,11 @@
-import {app, Display, scene, tweenManager} from "./app.js";
+import {app, Display, scene, camera, tweenManager} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
 export let  cat,
-            road_tile, road_tile_v
+            road_tile
 
 
 //Setup images and add them to stage
@@ -21,27 +21,49 @@ export function start(){
 
     resizeGame();
 
-    subscribe(scene);
+    subscribe(camera);
 
     app.ticker.add(gameLoop);
 }
 
 let dist;
 
-// let xSpeed = scene.x + 100 * dragAngle;
-// let ySpeed = scene.y + 100 * dragAngle;
+let dragAngle = 0, dragSpeed = 0, offsetX = 0, offsetY = 0;
 
 export function gameLoop(delta){
 
     if (dragSpeed !== 0){
 
-        // if (scene.x > config.worldWidth / 2){
-        //     dragSpeed = 0;
-        // }
-            scene.x -= dragSpeed * Math.cos(dragAngle);
-            scene.y -= dragSpeed * Math.sin(dragAngle);
-            cat.x += dragSpeed * Math.cos(dragAngle);
-            cat.y += dragSpeed * Math.sin(dragAngle);
+        if (scene.x > config.worldWidth / 2){
+
+            offsetX = scene.x - config.worldWidth / 2;
+        }
+        else if (scene.x < config.worldWidth / 2 * -1){
+
+            offsetX = scene.x - config.worldWidth / 2 * -1;
+        }
+        else{
+            offsetX = 0;
+        }
+
+        if (scene.y > config.worldHeight / 2){
+
+            offsetY = scene.y - config.worldHeight / 2;
+        }
+        else if (scene.y < config.worldHeight / 2 * -1){
+
+            offsetY = scene.y - config.worldHeight / 2 * -1;
+        }
+        else{
+            offsetY = 0;
+        }
+
+        console.log(cat.x);
+
+        scene.x -= dragSpeed * Math.cos(dragAngle) + offsetX;
+        scene.y -= dragSpeed * Math.sin(dragAngle) + offsetY;
+        cat.x += dragSpeed * Math.cos(dragAngle) + offsetX;
+        cat.y += dragSpeed * Math.sin(dragAngle) + offsetY;
     }
 
     console.log(scene.x > config.worldWidth / 2);
@@ -112,8 +134,6 @@ function subscribe(obj) {
         .on('mousemove', onDragMove)
         .on('touchmove', onDragMove);
 }
-
-let dragAngle = 0, dragSpeed = 0;
 
 function onDragStart(event) {
 

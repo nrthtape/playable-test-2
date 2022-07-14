@@ -42,31 +42,22 @@ const sceneRect = new Graphics();
 sceneRect.beginFill(0x4cc0cd);
 sceneRect.drawRect((config.width - config.worldWidth) / 2, (config.height - config.worldHeight) / 2, config.worldWidth, config.worldHeight);
 sceneRect.endFill();
-// sceneRect.alpha = 0;
 
 scene.addChild(sceneRect);
 
 app.stage.addChild(scene);
 
-// // create viewport
-// viewport = new pixi_viewport.Viewport({
-//     screenWidth: config.width,
-//     screenHeight: config.height,
-//     worldWidth: config.worldWidth,
-//     worldHeight: config.worldHeight,
-//
-//     interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
-// })
-//
-//
-// // activate plugins
-// viewport
-//     .drag({wheel: false})
-//     // .mouseEdges({radius: 500, right: 10})
-//     .decelerate()
+export const camera = new Container();
 
-// add the viewport to the stage
-// app.stage.addChild(viewport)
+const cameraRect = new Graphics();
+cameraRect.beginFill(0x4cc0cd);
+cameraRect.drawRect((config.width - config.worldWidth) / 2, (config.height - config.worldHeight) / 2, config.worldWidth, config.worldHeight);
+cameraRect.endFill();
+cameraRect.alpha = 0;
+
+camera.addChild(cameraRect);
+
+app.stage.addChild(camera);
 
 //Load an image and run the `setup` function when it's done
 loader
