@@ -38,7 +38,7 @@ config.element.appendChild(app.view);
 
 export const scene = new Container();
 
-const sceneRect = new Graphics();
+export const sceneRect = new Graphics();
 sceneRect.beginFill(0x4cc0cd);
 sceneRect.drawRect((config.width - config.worldWidth) / 2, (config.height - config.worldHeight) / 2, config.worldWidth, config.worldHeight);
 sceneRect.endFill();

@@ -1,4 +1,4 @@
-import {app, Graphics, Display, scene, camera, tweenManager} from "./app.js";
+import {app, sceneRect, Graphics, Display, scene, camera, tweenManager} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
@@ -13,15 +13,6 @@ export function setup(){
 
     cat = getSpriteByConfig({name: "cat", parent: scene});
 
-    catMask = new Graphics()
-        .beginFill(0xff0000, 1)
-        // .drawRoundedRect(-80, -60, 160, 100, 100)
-        .drawCircle(0, -15, 60)
-        .endFill()
-    catMask.width *= 1.5;
-    catMask.visible = false;
-    cat.addChild(catMask);
-
     road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
 }
 
@@ -34,10 +25,6 @@ export function start(){
 
     app.ticker.add(gameLoop);
 }
-
-let dist;
-
-let trigger = false;
 
 let dragAngle = 0, dragSpeed = 0, offsetX = 0, offsetY = 0;
 
@@ -77,8 +64,17 @@ export function gameLoop(delta){
 
     // console.log(scene.x > config.worldWidth / 2);
 
+    // console.log(cat === cat);
+    for (let i = 0; i < scene.children.length; i++){
 
-    vacuum(road_tile, cat, 500);
+        if (scene.children[i] !== cat && scene.children[i] !== sceneRect){
+
+            if (rectIntersect(scene.children[i], cat)){
+
+                vacuum(scene.children[i], cat);
+            }
+        }
+    }
 
     tweenManager.update();
 }
@@ -109,39 +105,27 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function vacuum(source, target, trigger){;
+function vacuum(source, target){;
 
-    let speed = 0;
+    let speed = 0.05;
 
-    let dist = getDistance(source, target);
-
-    if (dist < trigger) {
-
-        speed = 0.01
-
-        if (rectIntersect(source, target)){
-
-            // target.children[0].visible = true;
-            // source.mask = target.children[0];
-            speed = 0.25
-        }
-    }
+    let dist = getDistance(source, {x: target.x, y: target.y + 10});
 
     source.x = lerp(source.x, target.x, speed);
     source.y = lerp(source.y, target.y + 10, speed);
 
-    if (rectIntersect(source, target)){
+    console.log(source.scale);
 
-        if (source.width > 0){
+    if (dist < 300){
 
+        if (source.scale.x > 0.1){
 
-            source.width -= source.width / 10;
-            source.height -= source.height / 10;
+            source.scale.set(1 / 300 * dist);
         }
         else{
 
-            // source.parent.removeChild(source);
-            source.visible = false;
+            source.parent.removeChild(source);
+            // source.visible = false;
         }
     }
 }
@@ -200,13 +184,13 @@ function onDragMove() {
         this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 2;
 
         // Проверка смещения точки нажатия
-        this.addChild(
-            new Graphics()
-                .beginFill(0xff0000, 1)
-                .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
-                .endFill()
-
-        );
+        // this.addChild(
+        //     new Graphics()
+        //         .beginFill(0xff0000, 1)
+        //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
+        //         .endFill()
+        //
+        // );
     }
 }
 
