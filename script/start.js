@@ -4,7 +4,7 @@ import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
-export let  cat, catMask,
+export let  cat, catTween, catMask,
             road_tile
 
 
@@ -80,21 +80,6 @@ export function gameLoop(delta){
 
     vacuum(road_tile, cat, 500);
 
-
-    // if (rectIntersect(road_tile, cat)) {
-    //
-    //     if (!trigger) {
-    //         trigger = true;
-    //     }
-    // }
-
-    // console.log(trigger);
-
-    // if (trigger){
-    //
-    //     vacuum(road_tile, cat);
-    // }
-
     tweenManager.update();
 }
 
@@ -124,20 +109,20 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function vacuum(source, target, triggerDistance){;
+function vacuum(source, target, trigger){;
 
     let speed = 0;
 
     let dist = getDistance(source, target);
 
-    if (dist < 700) {
+    if (dist < trigger) {
 
-        speed = 0.05
+        speed = 0.01
 
-        if (rectIntersect(source, target.children[0])) {
+        if (rectIntersect(source, target)){
 
-            // target.children[0].visible = true;
-            // source.mask = target.children[0];
+            target.children[0].visible = true;
+            source.mask = target.children[0];
             speed = 0.25
         }
     }
@@ -145,9 +130,7 @@ function vacuum(source, target, triggerDistance){;
     source.x = lerp(source.x, target.x, speed);
     source.y = lerp(source.y, target.y + 10, speed);
 
-    console.log(dist);
-
-    if (rectIntersect(source, target.children[0])){
+    if (rectIntersect(source, target)){
 
         if (source.width > 0){
 
