@@ -1,6 +1,7 @@
 import {app, Display, scene, tweenManager} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
+import {config} from "./config.js";
 
 //Declare variables for images
 export let  cat,
@@ -22,42 +23,29 @@ export function start(){
 
     subscribe(scene);
 
-    // app.view.interactive = true;
-    //
-    // app.view.on("mouseover", function (){
-    //
-    //     app.view.on('pointerdown', function (data) {
-    //         app.view.dragging = true;
-    //         onPointerDown(data);
-    //     });
-    //
-    //     app.view.on('pointermove', function (data) {
-    //         if (app.view.dragging){
-    //
-    //             onPointerDown(data);
-    //         }
-    //     });
-    //
-    //     app.view.on('pointerup', function () {
-    //         app.view.dragging = false;
-    //     });
-    // });
-
-    // app.view.on("pointerup", function(e) {
-    //     app.view.x = e.data.global.x;
-    //     app.view.y = e.data.global.y;
-    //     app.view.dragging = false;
-    // })
-
     app.ticker.add(gameLoop);
 }
 
 let dist;
 
+// let xSpeed = scene.x + 100 * dragAngle;
+// let ySpeed = scene.y + 100 * dragAngle;
+
 export function gameLoop(delta){
 
-    // cat.x -= 10;
-    // cat.y -= 10;
+    if (dragSpeed !== 0){
+
+        // if (scene.x > config.worldWidth / 2){
+        //     dragSpeed = 0;
+        // }
+
+            scene.x -= dragSpeed * Math.cos(dragAngle);
+            scene.y -= dragSpeed * Math.sin(dragAngle);
+            cat.x += dragSpeed * Math.cos(dragAngle);
+            cat.y += dragSpeed * Math.sin(dragAngle);
+    }
+
+    console.log(scene.x > config.worldWidth / 2);
 
     if (rectIntersect(road_tile, cat)){
 
@@ -104,7 +92,7 @@ function vacuum(source, target){
 
 const onPointerDown = ({data}) => {
 
-    const pos = data.getLocalPosition(app.view);
+    const pos = data.getLocalPosition(scene);
     console.log(pos);
 }
 
@@ -126,36 +114,42 @@ function subscribe(obj) {
         .on('touchmove', onDragMove);
 }
 
-function onDragStart(event) {
-    if (!this.dragging) {
-        this.data = event.data;
-        // this.oldGroup = this.parentGroup;
-        // this.parentGroup = dragGroup;
-        this.dragging = true;
+let dragAngle = 0, dragSpeed = 0;
 
-        // this.scale.x *= 1.1;
-        // this.scale.y *= 1.1;
+function onDragStart(event) {
+
+    if (!this.dragging) {
+
+        this.data = event.data;
+        this.dragging = true;
         this.dragPoint = event.data.getLocalPosition(this.parent);
-        this.dragPoint.x -= this.x;
-        this.dragPoint.y -= this.y;
+
+        dragSpeed = 0;
+        dragAngle = 0;
     }
 }
 
 function onDragEnd() {
+
     if (this.dragging) {
+
         this.dragging = false;
-        // this.parentGroup = this.oldGroup;
-        // this.scale.x /= 1.1;
-        // this.scale.y /= 1.1;
-        // set the interaction data to null
         this.data = null;
+
+        dragSpeed = 0;
+        dragAngle = 0;
     }
 }
 
 function onDragMove() {
     if (this.dragging) {
+
         const newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x - this.dragPoint.x;
-        this.y = newPosition.y - this.dragPoint.y;
+        const maxDiff = 10;
+        const xDiff = (newPosition.x - this.dragPoint.x);
+        const yDiff = (newPosition.y - this.dragPoint.y);
+
+        dragAngle = Math.atan2(yDiff, xDiff);
+        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
     }
 }
