@@ -39,6 +39,7 @@ export function gameLoop(delta){
 
     catSpeed.text = Math.round(cameraSpeed);
 
+    //camera function?
     if (!camera.dragging){
 
         if (cameraSpeed > 0){
@@ -83,16 +84,14 @@ export function gameLoop(delta){
         cat.y += cameraSpeed * Math.sin(cameraAngle) + offsetY;
     }
 
-    // console.log(scene.x > config.worldWidth / 2);
-
-    // console.log(cat === cat);
+    // dinner time!
     for (let i = 0; i < scene.children.length; i++){
 
         if (scene.children[i] !== cat && scene.children[i] !== sceneRect){
 
             if (rectIntersect(scene.children[i], cat)){
 
-                stayDinner(scene.children[i], cat);
+                goStomach(scene.children[i], cat);
             }
         }
     }
@@ -126,7 +125,7 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function stayDinner(source, target){;
+function goStomach(source, target){;
 
     let speed = 0.05;
 
