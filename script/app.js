@@ -48,6 +48,7 @@ scene.addChild(sceneRect);
 app.stage.addChild(scene);
 
 export const camera = new Container();
+camera.dragging = false;
 
 const cameraRect = new Graphics();
 cameraRect.beginFill(0x4cc0cd);

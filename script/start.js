@@ -4,9 +4,8 @@ import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
-export let  cat, catTween, catMask,
+export let  cat, catSpeed,
             road_tile
-
 
 //Setup images and add them to stage
 export function setup(){
@@ -14,6 +13,14 @@ export function setup(){
     cat = getSpriteByConfig({name: "cat", parent: scene});
 
     road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
+
+    catSpeed = new PIXI.Text('Basic text in pixi');
+    catSpeed.x = 0;
+    catSpeed.y = 150;
+    catSpeed.anchor.set(0.5)
+    catSpeed.scale.set(3)
+
+    cat.addChild(catSpeed);
 }
 
 //This function will run when the image has loaded
@@ -26,11 +33,25 @@ export function start(){
     app.ticker.add(gameLoop);
 }
 
-let dragAngle = 0, dragSpeed = 0, offsetX = 0, offsetY = 0;
+let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
 export function gameLoop(delta){
 
-    if (dragSpeed !== 0){
+    catSpeed.text = Math.round(cameraSpeed);
+
+    if (!camera.dragging){
+
+        if (cameraSpeed > 0){
+
+            cameraSpeed -= 0.15;
+        }
+        else{
+
+            cameraSpeed = 0;
+        }
+    }
+
+    if (cameraSpeed !== 0){
 
         if (scene.x > config.worldWidth / 2){
 
@@ -56,10 +77,10 @@ export function gameLoop(delta){
             offsetY = 0;
         }
 
-        scene.x -= dragSpeed * Math.cos(dragAngle) + offsetX;
-        scene.y -= dragSpeed * Math.sin(dragAngle) + offsetY;
-        cat.x += dragSpeed * Math.cos(dragAngle) + offsetX;
-        cat.y += dragSpeed * Math.sin(dragAngle) + offsetY;
+        scene.x -= cameraSpeed * Math.cos(cameraAngle) + offsetX;
+        scene.y -= cameraSpeed * Math.sin(cameraAngle) + offsetY;
+        cat.x += cameraSpeed * Math.cos(cameraAngle) + offsetX;
+        cat.y += cameraSpeed * Math.sin(cameraAngle) + offsetY;
     }
 
     // console.log(scene.x > config.worldWidth / 2);
@@ -114,12 +135,11 @@ function vacuum(source, target){;
     source.x = lerp(source.x, target.x, speed);
     source.y = lerp(source.y, target.y + 10, speed);
 
-    console.log(source.scale);
-
     if (dist < 300){
 
         if (source.scale.x > 0.1){
 
+            source.angle += 5 / 300 * (300 - dist);
             source.scale.set(1 / 300 * dist);
         }
         else{
@@ -151,8 +171,8 @@ function onDragStart(event) {
         this.dragging = true;
         this.dragPoint = event.data.getLocalPosition(this.parent);
 
-        dragSpeed = 0;
-        dragAngle = 0;
+        // cameraSpeed = 0;
+        // cameraAngle = 0;
     }
 }
 
@@ -163,8 +183,8 @@ function onDragEnd() {
         this.dragging = false;
         this.data = null;
 
-        dragSpeed = 0;
-        dragAngle = 0;
+        // cameraSpeed = 0;
+        // cameraAngle = 0;
     }
 }
 
@@ -172,25 +192,25 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 300;
+        const maxDiff = 50;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
-        dragAngle = Math.atan2(yDiff, xDiff);
-        dragSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
+        cameraAngle = Math.atan2(yDiff, xDiff);
+        cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 5;
 
         // Смещение точки нажатия для более удобного управления
-        this.dragPoint.x += dragSpeed * Math.cos(dragAngle) / 3;
-        this.dragPoint.y += dragSpeed * Math.sin(dragAngle) / 3;
+        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 3;
+        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 3;
 
         // Проверка смещения точки нажатия
-        this.addChild(
-            new Graphics()
-                .beginFill(0xff0000, 1)
-                .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
-                .endFill()
-
-        );
+        // this.addChild(
+        //     new Graphics()
+        //         .beginFill(0xff0000, 1)
+        //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
+        //         .endFill()
+        //
+        // );
     }
 }
 
