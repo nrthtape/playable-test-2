@@ -92,7 +92,7 @@ export function gameLoop(delta){
 
             if (rectIntersect(scene.children[i], cat)){
 
-                vacuum(scene.children[i], cat);
+                stayDinner(scene.children[i], cat);
             }
         }
     }
@@ -126,7 +126,7 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function vacuum(source, target){;
+function stayDinner(source, target){;
 
     let speed = 0.05;
 
