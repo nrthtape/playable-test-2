@@ -1,11 +1,13 @@
-import {app, sceneRect, Graphics, Display, scene, camera, tweenManager} from "./app.js";
+import {app, sceneRect, Graphics, Display, scene, camera, tweenManager, TextStyle} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
 export let  cat, catSpeed,
-            road_tile
+            road_tile,
+            fpsCounter,
+            style
 
 //Setup images and add them to stage
 export function setup(){
@@ -14,13 +16,26 @@ export function setup(){
 
     road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
 
-    catSpeed = new PIXI.Text('Basic text in pixi');
+    style = new TextStyle({
+        fill: ['#ffff00'],
+        stroke: '#004620',
+        strokeThickness: 3
+    });
+
+    catSpeed = new PIXI.Text("catSpeed", style);
     catSpeed.x = 0;
     catSpeed.y = 150;
     catSpeed.anchor.set(0.5)
     catSpeed.scale.set(3)
 
     cat.addChild(catSpeed);
+
+    fpsCounter = new PIXI.Text("fpsCounter", style);
+    fpsCounter.x = 10;
+    fpsCounter.y = 0;
+    fpsCounter.scale.set(3)
+
+    scene.addChild(fpsCounter);
 }
 
 //This function will run when the image has loaded
@@ -38,6 +53,7 @@ let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 export function gameLoop(delta){
 
     catSpeed.text = Math.round(cameraSpeed);
+    fpsCounter.text = Math.round(app.ticker.FPS);
 
     //camera function?
     if (!camera.dragging){
