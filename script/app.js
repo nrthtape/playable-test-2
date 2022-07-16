@@ -63,6 +63,7 @@ app.stage.addChild(camera);
 //Load an image and run the `setup` function when it's done
 loader
     .add("images/atlas.json")
+    .add("images/grid.jpg")
     .load(setup)
     .onComplete.add(start)
 

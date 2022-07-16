@@ -1,20 +1,36 @@
-import {app, sceneRect, Graphics, Display, scene, camera, tweenManager, TextStyle} from "./app.js";
+import {app, sceneRect, resources, Sprite, Graphics, Display, scene, camera, tweenManager, TextStyle} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {Layer, getSpriteByConfig} from "./resourses.js";
 import {config} from "./config.js";
 
 //Declare variables for images
 export let  cat, catSpeed,
-            road_tile,
+            car, car_count,
             fpsCounter,
-            style
+            style,
+            grid
 
 //Setup images and add them to stage
 export function setup(){
 
     cat = getSpriteByConfig({name: "cat", parent: scene});
 
-    road_tile = getSpriteByConfig({name: "road_tile", parent: scene, position: [200, 200]});
+    car_count = 100;
+
+    for (let i = 0; i < car_count; i++){
+
+        let sprite;
+
+        if (Math.random() > 0.5){
+            sprite = "car_yellow";
+        }
+        else{
+            sprite = "car_violet";
+        }
+
+        getSpriteByConfig({name: sprite, parent: scene, position: [Math.random() * scene.width / 2, Math.random() * scene.height / 2]});
+
+    }
 
     style = new TextStyle({
         fill: ['#ffff00'],
@@ -26,14 +42,14 @@ export function setup(){
     catSpeed.x = 0;
     catSpeed.y = 150;
     catSpeed.anchor.set(0.5)
-    catSpeed.scale.set(3)
+    catSpeed.scale.set(2)
 
     cat.addChild(catSpeed);
 
     fpsCounter = new PIXI.Text("fpsCounter", style);
     fpsCounter.x = 10;
     fpsCounter.y = 0;
-    fpsCounter.scale.set(3)
+    fpsCounter.scale.set(2)
 
     app.stage.addChild(fpsCounter);
 }
@@ -54,7 +70,7 @@ let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 export function gameLoop(delta){
 
     catSpeed.text = "Speed: " + Math.round(cameraSpeed);
-    fpsCounter.text = Math.round(app.ticker.FPS);
+    fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
 
     //camera function?
 
@@ -105,7 +121,9 @@ export function gameLoop(delta){
     // dinner time!
     for (let i = 0; i < scene.children.length; i++){
 
-        if (scene.children[i] !== cat && scene.children[i] !== sceneRect){
+        if (scene.children[i] !== cat &&
+            scene.children[i] !== sceneRect
+        ){
 
             if (rectIntersect(scene.children[i], cat)){
 
@@ -152,7 +170,7 @@ function goStomach(source, target, delta){;
     source.x = lerp(source.x, target.x, speed * delta);
     source.y = lerp(source.y, target.y + 10, speed * delta);
 
-    let minDist = 100;
+    let minDist = 300;
 
     if (dist < minDist){
 
@@ -219,8 +237,8 @@ function onDragMove() {
         cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
 
         // Смещение точки нажатия для более удобного управления
-        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 2;
-        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 2;
+        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
+        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
 
         // Проверка смещения точки нажатия
         // this.addChild(
