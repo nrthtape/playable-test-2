@@ -35,7 +35,7 @@ export function setup(){
     fpsCounter.y = 0;
     fpsCounter.scale.set(3)
 
-    scene.addChild(fpsCounter);
+    app.stage.addChild(fpsCounter);
 }
 
 //This function will run when the image has loaded
@@ -45,6 +45,7 @@ export function start(){
 
     subscribe(camera);
 
+    // app.ticker.maxFPS = 30;
     app.ticker.add(gameLoop);
 }
 
@@ -52,15 +53,16 @@ let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
 export function gameLoop(delta){
 
-    catSpeed.text = Math.round(cameraSpeed);
+    catSpeed.text = "Speed: " + Math.round(cameraSpeed);
     fpsCounter.text = Math.round(app.ticker.FPS);
 
     //camera function?
+
     if (!camera.dragging){
 
         if (cameraSpeed > 0){
 
-            cameraSpeed -= 0.15;
+            cameraSpeed -= 0.15 * delta;
         }
         else{
 
@@ -94,10 +96,10 @@ export function gameLoop(delta){
             offsetY = 0;
         }
 
-        scene.x -= cameraSpeed * Math.cos(cameraAngle) + offsetX;
-        scene.y -= cameraSpeed * Math.sin(cameraAngle) + offsetY;
-        cat.x += cameraSpeed * Math.cos(cameraAngle) + offsetX;
-        cat.y += cameraSpeed * Math.sin(cameraAngle) + offsetY;
+        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+        cat.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        cat.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
     }
 
     // dinner time!
@@ -107,7 +109,7 @@ export function gameLoop(delta){
 
             if (rectIntersect(scene.children[i], cat)){
 
-                goStomach(scene.children[i], cat);
+                goStomach(scene.children[i], cat, delta);
             }
         }
     }
@@ -141,21 +143,23 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function goStomach(source, target){;
+function goStomach(source, target, delta){;
 
     let speed = 0.05;
 
     let dist = getDistance(source, {x: target.x, y: target.y + 10});
 
-    source.x = lerp(source.x, target.x, speed);
-    source.y = lerp(source.y, target.y + 10, speed);
+    source.x = lerp(source.x, target.x, speed * delta);
+    source.y = lerp(source.y, target.y + 10, speed * delta);
 
-    if (dist < 300){
+    let minDist = 100;
+
+    if (dist < minDist){
 
         if (source.scale.x > 0.1){
 
-            source.angle += 5 / 300 * (300 - dist);
-            source.scale.set(1 / 300 * dist);
+            source.angle += 5 / minDist * (minDist - dist) * delta;
+            source.scale.set(1 / minDist * dist);
         }
         else{
 
@@ -207,16 +211,16 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 50;
+        const maxDiff = 300;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         cameraAngle = Math.atan2(yDiff, xDiff);
-        cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 5;
+        cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
 
         // Смещение точки нажатия для более удобного управления
-        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 3;
-        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 3;
+        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 2;
+        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 2;
 
         // Проверка смещения точки нажатия
         // this.addChild(
