@@ -67,9 +67,11 @@ export function start(){
 
 let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
+let count = 0;
+
 export function gameLoop(delta){
 
-    catSpeed.text = "Speed: " + Math.round(cameraSpeed);
+    catSpeed.text = "Cars: " + Math.round(count);
     fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
 
     //camera function?
@@ -161,7 +163,7 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function goStomach(source, target, delta){;
+function goStomach(source, target, delta){
 
     let speed = 0.05;
 
@@ -180,8 +182,8 @@ function goStomach(source, target, delta){;
             source.scale.set(1 / minDist * dist);
         }
         else{
-
             source.parent.removeChild(source);
+            count++;
             // source.visible = false;
         }
     }
