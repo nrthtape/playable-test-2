@@ -15,21 +15,23 @@ export function setup(){
 
     cat = getSpriteByConfig({name: "cat", parent: scene});
 
-    car_count = 100;
+    car_count = 300;
 
     for (let i = 0; i < car_count; i++){
 
-        let sprite;
+        let name, sprite;
 
         if (Math.random() > 0.5){
-            sprite = "car_yellow";
+            name = "car_yellow";
         }
         else{
-            sprite = "car_violet";
+            name = "car_violet";
         }
 
-        getSpriteByConfig({name: sprite, parent: scene, position: [Math.random() * scene.width / 2, Math.random() * scene.height / 2]});
+        sprite = getSpriteByConfig({name: name, parent: scene, position: [Math.random() * scene.width / 2, Math.random() * scene.height / 2]});
 
+        sprite.catched = false;
+        sprite.catchTime = 0;
     }
 
     style = new TextStyle({
@@ -123,14 +125,41 @@ export function gameLoop(delta){
     // dinner time!
     for (let i = 0; i < scene.children.length; i++){
 
-        if (scene.children[i] !== cat &&
-            scene.children[i] !== sceneRect
+        let car = scene.children[i];
+
+        if (car !== cat &&
+            car !== sceneRect
         ){
 
-            if (rectIntersect(scene.children[i], cat)){
+            if (rectIntersect(car, cat)){
 
-                goStomach(scene.children[i], cat, delta);
+                if (!car.catched){
+
+                    car.catched = true;
+                }
             }
+        }
+    }
+
+    for (let i = 0; i < scene.children.length; i++){
+
+        let car = scene.children[i];
+
+        if (car !== cat &&
+            car !== sceneRect
+        ){
+
+            if (car.catched){
+
+                car.catchTime += delta;
+
+                let speed = 0.01 * car.catchTime;
+
+                console.log(speed);
+
+                goStomach(car, cat, speed);
+            }
+
         }
     }
 
@@ -163,9 +192,9 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-function goStomach(source, target, delta){
+function goStomach(source, target, speed){
 
-    let speed = 0.05;
+    const delta = app.ticker.deltaTime;
 
     let dist = getDistance(source, {x: target.x, y: target.y + 10});
 
@@ -182,9 +211,10 @@ function goStomach(source, target, delta){
             source.scale.set(1 / minDist * dist);
         }
         else{
+
             source.parent.removeChild(source);
+            source.catchTime = 0;
             count++;
-            // source.visible = false;
         }
     }
 }
