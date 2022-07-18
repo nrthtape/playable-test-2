@@ -14,7 +14,9 @@ export const    Application = PIXI.Application,
                 TextStyle = PIXI.TextStyle,
                 Display = PIXI.display,
                 tweenManager = PIXI.tweenManager,
-                Easing = PIXI.tween.Easing
+                Easing = PIXI.tween.Easing,
+                Group = PIXI.display.Group,
+                Layer = PIXI.display.Layer
 
 
 export let app, viewport;

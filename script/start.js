@@ -1,6 +1,7 @@
-import {app, sceneRect, resources, Sprite, Graphics, Display, scene, camera, tweenManager, TextStyle} from "./app.js";
+import {app, Group, Layer, sceneRect, resources, Sprite, Graphics, scene, camera, tweenManager, TextStyle} from "./app.js";
 import {resizeGame} from "./resize.js";
-import {Layer, getSpriteByConfig} from "./resourses.js";
+import {getSpriteByConfig} from "./resourses.js";
+import {Cat} from "./cat.js";
 import {config} from "./config.js";
 
 //Declare variables for images
@@ -10,10 +11,24 @@ export let  cat, catSpeed,
             style,
             grid
 
+const ui = new PIXI.display.Group(0, true);
+const city = new PIXI.display.Group(1, ((sprite) => {
+    // blue bunnies go up
+    sprite.zOrder = sprite.y;
+}));
+
 //Setup images and add them to stage
 export function setup(){
 
-    cat = getSpriteByConfig({name: "cat", parent: scene});
+    cat = getSpriteByConfig({
+        name: "cat",
+        parent: scene,
+        x: app.view.width / 2,
+        y: app.view.height / 2,
+        type: Cat
+    });
+
+    cat.parentGroup = ui;
 
     car_count = 300;
 
@@ -28,7 +43,14 @@ export function setup(){
             name = "car_violet";
         }
 
-        sprite = getSpriteByConfig({name: name, parent: scene, position: [Math.random() * scene.width / 2, Math.random() * scene.height / 2]});
+        sprite = getSpriteByConfig({
+            name: name,
+            parent: scene,
+            x: Math.random() * scene.width / 2,
+            y: Math.random() * scene.height / 2
+        });
+
+        sprite.parentGroup = city;
 
         sprite.catched = false;
         sprite.catchTime = 0;
@@ -73,7 +95,8 @@ let count = 0;
 
 export function gameLoop(delta){
 
-    catSpeed.text = "Cars: " + Math.round(count);
+    // catSpeed.text = "Cars: " + Math.round(count);
+    catSpeed.text = "Speed: " + Math.round(cameraSpeed);
     fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
 
     //camera function?
@@ -154,8 +177,6 @@ export function gameLoop(delta){
                 car.catchTime += delta;
 
                 let speed = 0.01 * car.catchTime;
-
-                console.log(speed);
 
                 goStomach(car, cat, speed);
             }
@@ -239,9 +260,6 @@ function onDragStart(event) {
         this.data = event.data;
         this.dragging = true;
         this.dragPoint = event.data.getLocalPosition(this.parent);
-
-        // cameraSpeed = 0;
-        // cameraAngle = 0;
     }
 }
 
@@ -251,9 +269,6 @@ function onDragEnd() {
 
         this.dragging = false;
         this.data = null;
-
-        // cameraSpeed = 0;
-        // cameraAngle = 0;
     }
 }
 
@@ -261,12 +276,12 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
-        const maxDiff = 300;
+        const maxDiff = 100;
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         cameraAngle = Math.atan2(yDiff, xDiff);
-        cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 30;
+        cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 10;
 
         // Смещение точки нажатия для более удобного управления
         this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
