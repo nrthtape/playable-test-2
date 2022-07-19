@@ -38,6 +38,8 @@ app.view.id = 'pixi-canvas';
 //Add the canvas that Pixi automatically created for you to the HTML document
 config.element.appendChild(app.view);
 
+app.stage = new PIXI.display.Stage();
+
 export const scene = new Container();
 
 export const sceneRect = new Graphics();
@@ -65,7 +67,6 @@ app.stage.addChild(camera);
 //Load an image and run the `setup` function when it's done
 loader
     .add("images/atlas.json")
-    .add("images/grid.jpg")
     .load(setup)
     .onComplete.add(start)
 

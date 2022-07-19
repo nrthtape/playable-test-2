@@ -9,16 +9,19 @@ export let  cat, catSpeed,
             car, car_count,
             fpsCounter,
             style,
-            grid
+            grid,
+    ui, city
 
-const ui = new PIXI.display.Group(0, true);
-const city = new PIXI.display.Group(1, ((sprite) => {
-    // blue bunnies go up
-    sprite.zOrder = sprite.y;
-}));
 
 //Setup images and add them to stage
 export function setup(){
+
+    ui = new PIXI.display.Group(1, true);
+    city = new PIXI.display.Group(0, true);
+    city.on('sort', (sprite) => {
+        // green bunnies go down
+        sprite.zOrder = -sprite.y;
+    });
 
     cat = getSpriteByConfig({
         name: "cat",
@@ -27,8 +30,6 @@ export function setup(){
         y: app.view.height / 2,
         type: Cat
     });
-
-    cat.parentGroup = ui;
 
     car_count = 300;
 
@@ -56,6 +57,8 @@ export function setup(){
         sprite.catchTime = 0;
     }
 
+    cat.parentGroup = ui;
+
     style = new TextStyle({
         fill: ['#ffff00'],
         stroke: '#004620',
@@ -74,6 +77,12 @@ export function setup(){
     fpsCounter.x = 10;
     fpsCounter.y = 0;
     fpsCounter.scale.set(2)
+
+    console.log(cat.zOrder);
+
+    app.stage.sortableChildren = true;
+    app.stage.addChild(new PIXI.display.Layer(city));
+    app.stage.addChild(new PIXI.display.Layer(ui));
 
     app.stage.addChild(fpsCounter);
 }
