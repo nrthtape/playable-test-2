@@ -10,9 +10,9 @@ export class Cat extends PIXI.Container{
         this.x = app.view.width / 2;
         this.y = app.view.height / 2;
 
-        this.count = 0;
+        this._count = 0;
 
-        this.cat = getSpriteByConfig({
+        this._cat = getSpriteByConfig({
             name: "cat",
             parent: this,
             group: catGroup
@@ -26,22 +26,25 @@ export class Cat extends PIXI.Container{
         });
     }
 
-    get bound(){
+    get cat(){
 
-        return this.cat;
+        return this._cat;
+    }
+
+    get count(){
+
+        return this._count;
     }
 
     eat(food, speed){
 
-        const delta = app.ticker.deltaTime;
+        const   x = this.x + this._cat.x,
+                y = this.y + this._cat.y + 10,
+                delta = app.ticker.deltaTime,
+                dist = getDistance(food, {x: x, y: y});
 
-        let dist = getDistance(food, {
-            x: this.x,
-            y: this.y + 0
-        });
-
-        food.x = lerp(food.x, this.x, speed * delta);
-        food.y = lerp(food.y, this.y + 0, speed * delta);
+        food.x = lerp(food.x, x, speed * delta);
+        food.y = lerp(food.y, y, speed * delta);
 
         let minDist = 200;
 
@@ -56,14 +59,9 @@ export class Cat extends PIXI.Container{
 
                 food.parent.removeChild(food);
                 food.catchTime = 0;
-                this.count++;
+                this._count++;
             }
         }
-    }
-
-    get getCount(){
-
-        return this.count;
     }
 }
 

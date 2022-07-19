@@ -162,7 +162,7 @@ export function gameLoop(delta){
             car !== sceneRect
         ){
 
-            if (rectIntersect(car, cat.bound)){
+            if (rectIntersect(car, cat.cat)){
 
                 if (!car.catched){
 
