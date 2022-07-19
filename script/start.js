@@ -1,4 +1,4 @@
-import {app, Group, Layer, sceneRect, resources, Sprite, Graphics, scene, camera, tweenManager, TextStyle} from "./app.js";
+import {app, sceneRect, scene, camera} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {getSpriteByConfig} from "./resourses.js";
 import {Cat} from "./cat.js";
@@ -10,26 +10,23 @@ export let  cat, catSpeed,
             fpsCounter,
             style,
             grid,
-    ui, city
+            uiGroup, bgGroup, cityGroup, catGroup
 
 
 //Setup images and add them to stage
 export function setup(){
 
-    ui = new PIXI.display.Group(1, true);
-    city = new PIXI.display.Group(0, true);
-    city.on('sort', (sprite) => {
-        // green bunnies go down
-        sprite.zOrder = -sprite.y;
+    uiGroup = new PIXI.display.Group(1, true);
+    catGroup = new PIXI.display.Group(-1, true);
+    bgGroup = new PIXI.display.Group(-2, true);
+    cityGroup = new PIXI.display.Group(0, (sprite) => {
+        sprite.zOrder = sprite.y;
     });
 
-    cat = getSpriteByConfig({
-        name: "cat",
-        parent: scene,
-        x: app.view.width / 2,
-        y: app.view.height / 2,
-        type: Cat
-    });
+    sceneRect.parentGroup = bgGroup;
+
+    cat = new Cat();
+    scene.addChild(cat);
 
     car_count = 300;
 
@@ -48,18 +45,17 @@ export function setup(){
             name: name,
             parent: scene,
             x: Math.random() * scene.width / 2,
-            y: Math.random() * scene.height / 2
+            y: Math.random() * scene.height / 2,
+            group: cityGroup
         });
-
-        sprite.parentGroup = city;
 
         sprite.catched = false;
         sprite.catchTime = 0;
     }
 
-    cat.parentGroup = ui;
+    // cat.parentGroup = catGroup;
 
-    style = new TextStyle({
+    style = new PIXI.TextStyle({
         fill: ['#ffff00'],
         stroke: '#004620',
         strokeThickness: 3
@@ -70,6 +66,7 @@ export function setup(){
     catSpeed.y = 150;
     catSpeed.anchor.set(0.5)
     catSpeed.scale.set(2)
+    catSpeed.parentGroup = uiGroup;
 
     cat.addChild(catSpeed);
 
@@ -81,8 +78,10 @@ export function setup(){
     console.log(cat.zOrder);
 
     app.stage.sortableChildren = true;
-    app.stage.addChild(new PIXI.display.Layer(city));
-    app.stage.addChild(new PIXI.display.Layer(ui));
+    app.stage.addChild(new PIXI.display.Layer(cityGroup));
+    app.stage.addChild(new PIXI.display.Layer(uiGroup));
+    app.stage.addChild(new PIXI.display.Layer(catGroup));
+    app.stage.addChild(new PIXI.display.Layer(bgGroup));
 
     app.stage.addChild(fpsCounter);
 }
@@ -104,8 +103,8 @@ let count = 0;
 
 export function gameLoop(delta){
 
-    // catSpeed.text = "Cars: " + Math.round(count);
-    catSpeed.text = "Speed: " + Math.round(cameraSpeed);
+    catSpeed.text = "Cars: " + Math.round(cat.count);
+    // catSpeed.text = "Speed: " + Math.round(cameraSpeed);
     fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
 
     //camera function?
@@ -163,7 +162,7 @@ export function gameLoop(delta){
             car !== sceneRect
         ){
 
-            if (rectIntersect(car, cat)){
+            if (rectIntersect(car, cat.bound)){
 
                 if (!car.catched){
 
@@ -187,13 +186,13 @@ export function gameLoop(delta){
 
                 let speed = 0.01 * car.catchTime;
 
-                goStomach(car, cat, speed);
+                cat.eat(car, speed);
             }
 
         }
     }
 
-    tweenManager.update();
+    PIXI.tweenManager.update();
 }
 
 window.onresize = function(){
@@ -211,42 +210,6 @@ function rectIntersect(a, b){
             aBox.x < bBox.x + bBox.width &&
             aBox.y + aBox.height > bBox.y &&
             aBox.y < bBox.y + bBox.height;
-}
-
-// Get distance between two points
-function getDistance(p1, p2) {
-
-    const a = p1.x - p2.x;
-    const b = p1.y - p2.y;
-
-    return Math.hypot(a, b);
-}
-
-function goStomach(source, target, speed){
-
-    const delta = app.ticker.deltaTime;
-
-    let dist = getDistance(source, {x: target.x, y: target.y + 10});
-
-    source.x = lerp(source.x, target.x, speed * delta);
-    source.y = lerp(source.y, target.y + 10, speed * delta);
-
-    let minDist = 300;
-
-    if (dist < minDist){
-
-        if (source.scale.x > 0.1){
-
-            source.angle += 5 / minDist * (minDist - dist) * delta;
-            source.scale.set(1 / minDist * dist);
-        }
-        else{
-
-            source.parent.removeChild(source);
-            source.catchTime = 0;
-            count++;
-        }
-    }
 }
 
 // / === DRAG ZONE ===
@@ -298,15 +261,11 @@ function onDragMove() {
 
         // Проверка смещения точки нажатия
         // this.addChild(
-        //     new Graphics()
+        //     new PIXI.Graphics()
         //         .beginFill(0xff0000, 1)
         //         .drawCircle(this.dragPoint.x, this.dragPoint.y, 10)
         //         .endFill()
         //
         // );
     }
-}
-
-function lerp(a, b, n) {
-    return (1 - n) * a + n * b;
 }

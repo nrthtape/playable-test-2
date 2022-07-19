@@ -1,4 +1,4 @@
-//Set game options
+//Set the game options
 export const config = {
     width: 1080,
     height: 1920,

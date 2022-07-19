@@ -1,10 +1,10 @@
-import {app, viewport, resources, Sprite} from "./app.js";
+import {app} from "./app.js";
 
 //Add sprite by config and return
 export function getSpriteByConfig(config){
 
     config = Object.assign({
-        type: Sprite,
+        type: PIXI.Sprite,
         parent: app.stage,
         x: 0,
         y: 0,
@@ -14,7 +14,7 @@ export function getSpriteByConfig(config){
         mask: false
     }, config);
 
-    const atlas = resources["images/atlas.json"].textures;
+    const atlas = PIXI.Loader.shared.resources["images/atlas.json"].textures;
 
     const sprite = new config.type(atlas[config.name + ".png"]);
     sprite.x = config.x;
@@ -24,16 +24,9 @@ export function getSpriteByConfig(config){
     sprite.mask = config.mask;
     sprite.rotation = config.rotation;
     sprite.scale.set(config.scale);
+    sprite.parentGroup = config.group;
 
     config.parent.addChild(sprite);
 
     return sprite;
-}
-
-export class Layer {
-
-    constructor(config){
-
-        this.sprite = getSpriteByConfig(config);
-    }
 }

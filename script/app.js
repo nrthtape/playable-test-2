@@ -1,28 +1,8 @@
 import {config} from "./config.js";
 import {start, setup} from "./start.js";
 
-//Aliases
-export const    Application = PIXI.Application,
-                Container = PIXI.Container,
-                ParticleContainer = PIXI.ParticleContainer,
-                loader = PIXI.Loader.shared,
-                resources = PIXI.Loader.shared.resources,
-                Graphics = PIXI.Graphics,
-                TextureCache = PIXI.utils.TextureCache,
-                Sprite = PIXI.Sprite,
-                Text = PIXI.Text,
-                TextStyle = PIXI.TextStyle,
-                Display = PIXI.display,
-                tweenManager = PIXI.tweenManager,
-                Easing = PIXI.tween.Easing,
-                Group = PIXI.display.Group,
-                Layer = PIXI.display.Layer
-
-
-export let app, viewport;
-
 //Create a Pixi Application
-app = new Application({
+export const app = new PIXI.Application({
     width: config.width,             // default: 800
     height: config.height,            // default: 600
     antialias: true,                // default: false
@@ -40,9 +20,9 @@ config.element.appendChild(app.view);
 
 app.stage = new PIXI.display.Stage();
 
-export const scene = new Container();
+export const scene = new PIXI.Container();
 
-export const sceneRect = new Graphics();
+export const sceneRect = new PIXI.Graphics();
 sceneRect.beginFill(0x4cc0cd);
 sceneRect.drawRect((config.width - config.worldWidth) / 2, (config.height - config.worldHeight) / 2, config.worldWidth, config.worldHeight);
 sceneRect.endFill();
@@ -51,10 +31,10 @@ scene.addChild(sceneRect);
 
 app.stage.addChild(scene);
 
-export const camera = new Container();
+export const camera = new PIXI.Container();
 camera.dragging = false;
 
-const cameraRect = new Graphics();
+const cameraRect = new PIXI.Graphics();
 cameraRect.beginFill(0x4cc0cd);
 cameraRect.drawRect((config.width - config.worldWidth) / 2, (config.height - config.worldHeight) / 2, config.worldWidth, config.worldHeight);
 cameraRect.endFill();
@@ -65,7 +45,7 @@ camera.addChild(cameraRect);
 app.stage.addChild(camera);
 
 //Load an image and run the `setup` function when it's done
-loader
+PIXI.Loader.shared
     .add("images/atlas.json")
     .load(setup)
     .onComplete.add(start)
