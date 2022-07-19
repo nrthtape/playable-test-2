@@ -1,23 +1,23 @@
 import {app, sceneRect, scene, camera} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {Cat} from "./cat.js";
+import {Player} from "./player.js";
 import {config} from "./config.js";
 
 //Declare variables for images
-export let  cat, catSpeed,
+export let  player, playerSpeed,
             car, car_count,
             fpsCounter,
             style,
             grid,
-            uiGroup, bgGroup, cityGroup, catGroup
+            uiGroup, bgGroup, cityGroup, playerGroup
 
 
 //Setup images and add them to stage
 export function setup(){
 
     uiGroup = new PIXI.display.Group(1, true);
-    catGroup = new PIXI.display.Group(-1, true);
+    playerGroup = new PIXI.display.Group(-1, true);
     bgGroup = new PIXI.display.Group(-2, true);
     cityGroup = new PIXI.display.Group(0, (sprite) => {
         sprite.zOrder = sprite.y;
@@ -25,10 +25,10 @@ export function setup(){
 
     sceneRect.parentGroup = bgGroup;
 
-    cat = new Cat();
-    scene.addChild(cat);
+    player = new Player();
+    scene.addChild(player);
 
-    car_count = 300;
+    car_count = 100;
 
     for (let i = 0; i < car_count; i++){
 
@@ -49,11 +49,11 @@ export function setup(){
             group: cityGroup
         });
 
-        sprite.catched = false;
-        sprite.catchTime = 0;
+        sprite.playerched = false;
+        sprite.playerchTime = 0;
     }
 
-    // cat.parentGroup = catGroup;
+    // player.parentGroup = playerGroup;
 
     style = new PIXI.TextStyle({
         fill: ['#ffff00'],
@@ -61,26 +61,26 @@ export function setup(){
         strokeThickness: 3
     });
 
-    catSpeed = new PIXI.Text("catSpeed", style);
-    catSpeed.x = 0;
-    catSpeed.y = 150;
-    catSpeed.anchor.set(0.5)
-    catSpeed.scale.set(2)
-    catSpeed.parentGroup = uiGroup;
+    playerSpeed = new PIXI.Text("playerSpeed", style);
+    playerSpeed.x = 0;
+    playerSpeed.y = 150;
+    playerSpeed.anchor.set(0.5)
+    playerSpeed.scale.set(2)
+    playerSpeed.parentGroup = uiGroup;
 
-    cat.addChild(catSpeed);
+    player.addChild(playerSpeed);
 
     fpsCounter = new PIXI.Text("fpsCounter", style);
     fpsCounter.x = 10;
     fpsCounter.y = 0;
     fpsCounter.scale.set(2)
 
-    console.log(cat.zOrder);
+    console.log(player.zOrder);
 
     app.stage.sortableChildren = true;
     app.stage.addChild(new PIXI.display.Layer(cityGroup));
     app.stage.addChild(new PIXI.display.Layer(uiGroup));
-    app.stage.addChild(new PIXI.display.Layer(catGroup));
+    app.stage.addChild(new PIXI.display.Layer(playerGroup));
     app.stage.addChild(new PIXI.display.Layer(bgGroup));
 
     app.stage.addChild(fpsCounter);
@@ -95,6 +95,11 @@ export function start(){
 
     // app.ticker.maxFPS = 30;
     app.ticker.add(gameLoop);
+
+    // scene.scale.set(0.5);
+    // player.scale.set(1 / 0.5);
+    // player.x /= 0.5
+    // player.y /= 0.5
 }
 
 let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
@@ -103,8 +108,8 @@ let count = 0;
 
 export function gameLoop(delta){
 
-    catSpeed.text = "Cars: " + Math.round(cat.count);
-    // catSpeed.text = "Speed: " + Math.round(cameraSpeed);
+    playerSpeed.text = "Cars: " + Math.round(player.count);
+    // playerSpeed.text = "Speed: " + Math.round(cameraSpeed);
     fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
 
     //camera function?
@@ -149,8 +154,8 @@ export function gameLoop(delta){
 
         scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
-        cat.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
-        cat.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+        player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
     }
 
     // dinner time!
@@ -158,15 +163,15 @@ export function gameLoop(delta){
 
         let car = scene.children[i];
 
-        if (car !== cat &&
+        if (car !== player &&
             car !== sceneRect
         ){
 
-            if (rectIntersect(car, cat.cat)){
+            if (rectIntersect(car, player.cat)){
 
-                if (!car.catched){
+                if (!car.playerched){
 
-                    car.catched = true;
+                    car.playerched = true;
                 }
             }
         }
@@ -176,17 +181,17 @@ export function gameLoop(delta){
 
         let car = scene.children[i];
 
-        if (car !== cat &&
+        if (car !== player &&
             car !== sceneRect
         ){
 
-            if (car.catched){
+            if (car.playerched){
 
-                car.catchTime += delta;
+                car.playerchTime += delta;
 
-                let speed = 0.01 * car.catchTime;
+                let speed = 0.01 * car.playerchTime;
 
-                cat.eat(car, speed);
+                player.eat(car, speed);
             }
 
         }
@@ -200,7 +205,7 @@ window.onresize = function(){
     resizeGame();
 }
 
-// Проверка, пересекаются ли объекты
+// Check intersect between two objects
 function rectIntersect(a, b){
 
     let aBox = a.getBounds();

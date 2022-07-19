@@ -11,6 +11,7 @@ export function getSpriteByConfig(config){
         rotation: 0,
         anchor: [0.5, 0.5],
         scale: 1,
+        score: 1,
         mask: false
     }, config);
 
@@ -25,6 +26,7 @@ export function getSpriteByConfig(config){
     sprite.rotation = config.rotation;
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
+    sprite.score = config.score;
 
     config.parent.addChild(sprite);
 

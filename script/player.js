@@ -1,8 +1,8 @@
 import {app} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {catGroup, uiGroup} from "./start.js";
+import {playerGroup, uiGroup} from "./start.js";
 
-export class Cat extends PIXI.Container{
+export class Player extends PIXI.Container{
     constructor(x, y)
     {
         super();
@@ -15,7 +15,7 @@ export class Cat extends PIXI.Container{
         this._cat = getSpriteByConfig({
             name: "cat",
             parent: this,
-            group: catGroup
+            group: playerGroup
         });
 
         this.nickname = getSpriteByConfig({
@@ -59,7 +59,7 @@ export class Cat extends PIXI.Container{
 
                 food.parent.removeChild(food);
                 food.catchTime = 0;
-                this._count++;
+                this._count += food.score;
             }
         }
     }
