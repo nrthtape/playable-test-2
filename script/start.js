@@ -70,20 +70,11 @@ export function setup(){
 
     player.addChild(playerSpeed);
 
-    fpsCounter = new PIXI.Text("fpsCounter", style);
-    fpsCounter.x = 10;
-    fpsCounter.y = 0;
-    fpsCounter.scale.set(2)
-
-    console.log(player.zOrder);
-
     app.stage.sortableChildren = true;
     app.stage.addChild(new PIXI.display.Layer(cityGroup));
     app.stage.addChild(new PIXI.display.Layer(uiGroup));
     app.stage.addChild(new PIXI.display.Layer(playerGroup));
     app.stage.addChild(new PIXI.display.Layer(bgGroup));
-
-    app.stage.addChild(fpsCounter);
 }
 
 //This function will run when the image has loaded
@@ -108,9 +99,7 @@ let count = 0;
 
 export function gameLoop(delta){
 
-    playerSpeed.text = "Cars: " + Math.round(player.count);
-    // playerSpeed.text = "Speed: " + Math.round(cameraSpeed);
-    fpsCounter.text = "FPS: " + Math.round(app.ticker.FPS);
+    playerSpeed.text = "Cars: " + Math.round(player.score);
 
     //camera function?
 

@@ -3,14 +3,15 @@ import {getSpriteByConfig} from "./resourses.js";
 import {playerGroup, uiGroup} from "./start.js";
 
 export class Player extends PIXI.Container{
-    constructor(x, y)
-    {
+
+    constructor(x, y){
+
         super();
 
         this.x = app.view.width / 2;
         this.y = app.view.height / 2;
 
-        this._count = 0;
+        this._score = 0;
 
         this._cat = getSpriteByConfig({
             name: "cat",
@@ -31,9 +32,9 @@ export class Player extends PIXI.Container{
         return this._cat;
     }
 
-    get count(){
+    get score(){
 
-        return this._count;
+        return this._score;
     }
 
     eat(food, speed){
@@ -59,7 +60,7 @@ export class Player extends PIXI.Container{
 
                 food.parent.removeChild(food);
                 food.catchTime = 0;
-                this._count += food.score;
+                this._score += food.score;
             }
         }
     }
