@@ -82,60 +82,7 @@ export function gameLoop(delta){
     bar.progress(Math.round(player.score));
     player.grow(Math.round(player.score));
 
-    //camera function?
-
-    if (!camera.dragging){
-
-        if (cameraSpeed > 0){
-
-            cameraSpeed -= 0.15 * delta;
-        }
-        else{
-
-            cameraSpeed = 0;
-        }
-    }
-
-    if (cameraSpeed !== 0){
-
-        if (scene.x > config.worldWidth / 2 - player.cat.width / 2){
-
-            offsetX = scene.x - config.worldWidth / 2 + player.cat.width / 2;
-        }
-        else if (scene.x < config.worldWidth / 2 * -1 + player.cat.width / 2){
-
-            offsetX = scene.x - config.worldWidth / 2 * -1 - player.cat.width / 2;
-        }
-        else{
-            offsetX = 0;
-        }
-
-        if (scene.y > config.worldHeight / 2 - player.cat.height / 2){
-
-            offsetY = scene.y - config.worldHeight / 2 + player.cat.height / 2;
-        }
-        else if (scene.y < config.worldHeight / 2 * -1 + player.cat.height / 2){
-
-            offsetY = scene.y - config.worldHeight / 2 * -1 - player.cat.height / 2;
-        }
-        else{
-            offsetY = 0;
-        }
-
-        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
-        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
-        player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
-        player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
-
-        console.log(player.x);
-        // viewport.scale.set(1 / player.scale.x);
-        // scene.anchor.set(0);
-        // scene.x = (player.x - player.x / player.scale.x) / 2;
-        // scene.y = (player.y - player.y / player.scale.y) / 2;
-        // console.log(Math.round(player.x * player.scale.x + (scene.x - config.width / 2)))
-        // console.log("scene: " + (scene.x - config.width / 2))
-        // scene.y = 1 / player.scale.y;
-    }
+    cameraMove(delta);
 
     // DINNER TIME
     for (let i = 0; i < scene.children.length; i++){
@@ -179,6 +126,50 @@ function rectIntersect(a, b){
             aBox.x < bBox.x + bBox.width &&
             aBox.y + aBox.height > bBox.y &&
             aBox.y < bBox.y + bBox.height;
+}
+
+function cameraMove(delta){
+
+    if (!camera.dragging){
+
+        if (cameraSpeed > 0){
+
+            cameraSpeed -= 0.15 * delta;
+        }
+        else{
+
+            cameraSpeed = 0;
+        }
+    }
+
+    if (cameraSpeed !== 0) {
+
+        if (scene.x > config.worldWidth / 2 - player.cat.width / 2) {
+
+            offsetX = scene.x - config.worldWidth / 2 + player.cat.width / 2;
+        } else if (scene.x < config.worldWidth / 2 * -1 + player.cat.width / 2) {
+
+            offsetX = scene.x - config.worldWidth / 2 * -1 - player.cat.width / 2;
+        } else {
+            offsetX = 0;
+        }
+
+        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+
+        if (scene.y > config.worldHeight / 2 - player.cat.height / 2) {
+
+            offsetY = scene.y - config.worldHeight / 2 + player.cat.height / 2;
+        } else if (scene.y < config.worldHeight / 2 * -1 + player.cat.height / 2) {
+
+            offsetY = scene.y - config.worldHeight / 2 * -1 - player.cat.height / 2;
+        } else {
+            offsetY = 0;
+        }
+
+        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+        player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+    }
 }
 
 // / === DRAG ZONE ===

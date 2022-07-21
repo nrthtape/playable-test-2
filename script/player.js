@@ -93,7 +93,7 @@ export class Player extends PIXI.Container{
             width: this.width * size,
             height: this.height * size
         });
-        tween.time = 1000;
+        tween.time = 1500;
         tween.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
         tween.start();
         tween.on("end", function (){
@@ -107,18 +107,18 @@ export class Player extends PIXI.Container{
 
             let grow = this._growTimes[i - 1];
 
-            if (value >= 15 * i){
+            if (value >= 10 * i){
 
                 if (!grow.end){
 
-                    this.scaleAnim(1.15);
+                    this.scaleAnim(1.2);
 
                     grow.end = true;
                 }
 
-                if (grow.timer < 50){
+                if (grow.timer < 10){
 
-                    viewport.zoom(1 + this.scale.x * 2, true);
+                    viewport.zoom(10 + easeInOutQuint(1) * this.scale.x * 10, true);
                     grow.timer++;
                 }
             }
@@ -139,4 +139,8 @@ function getDistance(p1, p2) {
 function linear(a, b, n) {
 
     return (1 - n) * a + n * b;
+}
+
+function easeInOutQuint(x){
+    return x < 0.5 ? 16 * x * x * x * x * x : 1 - Math.pow(-2 * x + 2, 5) / 2;
 }
