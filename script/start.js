@@ -124,14 +124,14 @@ export function gameLoop(delta){
             offsetY = 0;
         }
 
-        scene.x -= cameraSpeed / playerSize * delta * Math.cos(cameraAngle) + offsetX;
-        scene.y -= cameraSpeed / playerSize * delta * Math.sin(cameraAngle) + offsetY;
+        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
         player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
     }
 
-    scene.scale.set(1 / playerSize);
-    player.scale.set(playerSize);
+    // scene.scale.set(1 / playerSize);
+    // player.scale.set(playerSize);
 
     // DINNER TIME
     for (let i = 0; i < scene.children.length; i++){
