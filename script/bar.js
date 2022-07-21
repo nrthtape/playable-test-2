@@ -1,6 +1,6 @@
 import {app, viewport, scene} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {uiGroup, player, cameraSpeed} from "./start.js";
+import {uiGroup, player} from "./start.js";
 import {resizeGame} from "./resize.js";
 
 export class Bar extends PIXI.Container{

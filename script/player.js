@@ -1,7 +1,6 @@
 import {app, camera, viewport, scene} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
 import {flyingGroup, player, playerGroup, uiGroup} from "./start.js";
-import {config} from "./config.js";
 
 export class Player extends PIXI.Container{
 
@@ -116,9 +115,9 @@ export class Player extends PIXI.Container{
                     grow.end = true;
                 }
 
-                if (grow.timer < 10){
+                if (grow.timer < 100){
 
-                    viewport.zoom(10 + easeInOutQuint(1) * this.scale.x * 10, true);
+                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 1.5, true);
                     grow.timer++;
                 }
             }
