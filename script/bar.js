@@ -105,7 +105,7 @@ export class Bar extends PIXI.Container{
 
         const star = this._stars.children[n - 1];
 
-        star.filters = [new PIXI.filters.OutlineFilter(2, 0xffffff)];
+        // star.filters = [new PIXI.filters.OutlineFilter(2, 0xffffff)];
 
         const tween = PIXI.tweenManager.createTween(star);
 
@@ -130,7 +130,7 @@ export class Bar extends PIXI.Container{
                 if (!star.catched){
 
                     this.fillStars(i);
-                    // this.blinkStar(i);
+                    this.blinkStar(i);
                     star.catched = true;
                 }
             }
