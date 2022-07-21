@@ -105,7 +105,7 @@ export class Bar extends PIXI.Container{
 
         const star = this._stars.children[n - 1];
 
-        // star.filters = [new PIXI.filters.OutlineFilter(2, 0xffffff)];
+        star.filters = [outlineFilter];
 
         const tween = PIXI.tweenManager.createTween(star);
 
@@ -114,6 +114,9 @@ export class Bar extends PIXI.Container{
         tween.time = 1500;
         tween.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
         tween.start();
+        tween.on("end", function(){
+            tween.stop().clear();
+        })
     }
 
     progress(value){
@@ -137,3 +140,5 @@ export class Bar extends PIXI.Container{
         }
     }
 }
+
+const outlineFilter = new PIXI.filters.OutlineFilter(2, 0xffffff);
