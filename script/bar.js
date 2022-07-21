@@ -129,7 +129,7 @@ export class Bar extends PIXI.Container{
 
                 if (!star.catched){
 
-                    this.fillStars(i);
+                    // this.fillStars(i);
                     this.blinkStar(i);
                     star.catched = true;
                 }
