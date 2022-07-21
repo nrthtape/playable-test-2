@@ -46,7 +46,7 @@ app.stage.addChild(camera);
 
 //Load an image and run the `setup` function when it's done
 PIXI.Loader.shared
-    .add("images/atlas.json")
+    .add("atlas", "images/atlas.json")
     .load(setup)
     .onComplete.add(start)
 

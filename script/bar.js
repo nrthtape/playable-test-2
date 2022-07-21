@@ -44,15 +44,14 @@ export class Bar extends PIXI.Container{
         this._percents = new PIXI.Text("80%",
             new PIXI.TextStyle({
                 fill: "white",
-                fontFamily: "Arial Black",
-                fontSize: 50,
-                lineJoin: "round",
+                fontFamily: "fishdom",
+                fontSize: 70,
                 stroke: "#0c3278",
                 strokeThickness: 5
             })
         );
-        this._percents.parentGroup = uiGroup;
         this._percents.anchor.set(0.5);
+        this._percents.parentGroup = uiGroup;
         this.addChild(this._percents);
 
         this._stars = new PIXI.Container();
@@ -87,7 +86,7 @@ export class Bar extends PIXI.Container{
 
         for (let i = 0; i < 5; i++){
 
-            const atlas = PIXI.Loader.shared.resources["images/atlas.json"].textures;
+            const atlas = PIXI.Loader.shared.resources["atlas"].textures;
 
             if (i < count){
 
@@ -105,9 +104,12 @@ export class Bar extends PIXI.Container{
     blinkStar(n){
 
         const star = this._stars.children[n - 1];
+
+        star.filters = [new PIXI.filters.OutlineFilter(2, 0xffffff)];
+
         const tween = PIXI.tweenManager.createTween(star);
 
-        tween.from({width: star.width * 1.3, height: star.height * 1.3});
+        tween.from({width: star.width * 1.5, height: star.height * 1.5});
         tween.to({width: star.width, height: star.height});
         tween.time = 1500;
         tween.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
@@ -116,7 +118,7 @@ export class Bar extends PIXI.Container{
 
     progress(value){
 
-        this._percents.text = value + "%";
+        this._percents.text = " " + value + "%";
         this._fill.x = -this._fill.width + this._fill.width / 100 * value;
 
         for (let i = 1; i <= this._stars.children.length; i++){

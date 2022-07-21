@@ -16,7 +16,7 @@ export function getSpriteByConfig(config){
         food: true
     }, config);
 
-    const atlas = PIXI.Loader.shared.resources["images/atlas.json"].textures;
+    const atlas = PIXI.Loader.shared.resources["atlas"].textures;
 
     const sprite = new config.type(atlas[config.name + ".png"]);
     sprite.x = config.x;

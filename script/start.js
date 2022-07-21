@@ -59,23 +59,6 @@ export function setup(){
         });
     }
 
-    // player.parentGroup = playerGroup;
-
-    style = new PIXI.TextStyle({
-        fill: ['#ffff00'],
-        stroke: '#004620',
-        strokeThickness: 3
-    });
-
-    playerSpeed = new PIXI.Text("playerSpeed", style);
-    playerSpeed.x = 0;
-    playerSpeed.y = 150;
-    playerSpeed.anchor.set(0.5)
-    playerSpeed.scale.set(2)
-    playerSpeed.parentGroup = uiGroup;
-
-    player.addChild(playerSpeed);
-
     app.stage.sortableChildren = true;
     app.stage.addChild(new PIXI.display.Layer(cityGroup));
     app.stage.addChild(new PIXI.display.Layer(uiGroup));
@@ -95,13 +78,9 @@ export function start(){
 
 let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
-let count = 0;
-
 let playerSize = 1;
 
 export function gameLoop(delta){
-
-    playerSpeed.text = "Cars: " + bar.getValue;
 
     bar.progress(Math.round(player.score));
 
@@ -153,8 +132,6 @@ export function gameLoop(delta){
 
     scene.scale.set(1 / playerSize);
     player.scale.set(playerSize);
-
-    // console.log();
 
     // DINNER TIME
     for (let i = 0; i < scene.children.length; i++){
