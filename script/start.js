@@ -1,4 +1,4 @@
-import {app, sceneRect, scene, camera} from "./app.js";
+import {app, sceneRect, scene, camera, viewport} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {getSpriteByConfig} from "./resourses.js";
 import {Player} from "./player.js";
@@ -11,18 +11,26 @@ export let  player, playerSpeed,
             bar,
             style,
             grid,
-            uiGroup, bgGroup, cityGroup, playerGroup
+            uiGroup, flyingGroup, bgGroup, cityGroup, playerGroup
 
 
 //Setup images and add them to stage
 export function setup(){
 
-    uiGroup = new PIXI.display.Group(1, true);
-    playerGroup = new PIXI.display.Group(-1, true);
-    bgGroup = new PIXI.display.Group(-2, true);
+    uiGroup = new PIXI.display.Group(2, false);
+    flyingGroup = new PIXI.display.Group(1, true);
+    playerGroup = new PIXI.display.Group(-1, false);
+    bgGroup = new PIXI.display.Group(-2, false);
     cityGroup = new PIXI.display.Group(0, (sprite) => {
         sprite.zOrder = sprite.y;
     });
+
+    app.stage.sortableChildren = true;
+    app.stage.addChild(new PIXI.display.Layer(cityGroup));
+    app.stage.addChild(new PIXI.display.Layer(uiGroup));
+    app.stage.addChild(new PIXI.display.Layer(flyingGroup));
+    app.stage.addChild(new PIXI.display.Layer(playerGroup));
+    app.stage.addChild(new PIXI.display.Layer(bgGroup));
 
     sceneRect.parentGroup = bgGroup;
 
@@ -58,12 +66,6 @@ export function setup(){
             group: cityGroup
         });
     }
-
-    app.stage.sortableChildren = true;
-    app.stage.addChild(new PIXI.display.Layer(cityGroup));
-    app.stage.addChild(new PIXI.display.Layer(uiGroup));
-    app.stage.addChild(new PIXI.display.Layer(playerGroup));
-    app.stage.addChild(new PIXI.display.Layer(bgGroup));
 }
 
 //This function will run when the image has loaded
@@ -76,9 +78,7 @@ export function start(){
     app.ticker.add(gameLoop);
 }
 
-let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
-
-let playerSize = 1;
+export let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
 export function gameLoop(delta){
 
@@ -124,14 +124,15 @@ export function gameLoop(delta){
             offsetY = 0;
         }
 
-        scene.x -= cameraSpeed / playerSize * delta * Math.cos(cameraAngle) + offsetX;
-        scene.y -= cameraSpeed / playerSize * delta * Math.sin(cameraAngle) + offsetY;
+        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
         player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
-    }
 
-    scene.scale.set(1 / playerSize);
-    player.scale.set(playerSize);
+        // console.log(player.position);
+        // scene.scale.set(1 / player.scale.x);
+        // scene.y = 1 / player.scale.y;
+    }
 
     // DINNER TIME
     for (let i = 0; i < scene.children.length; i++){

@@ -20,6 +20,14 @@ config.element.appendChild(app.view);
 
 app.stage = new PIXI.display.Stage();
 
+export const viewport = new pixi_viewport.Viewport({
+    screenWidth: config.width,
+    screenHeight: config.height,
+    worldWidth: config.worldWidth,
+    worldHeight: config.worldHeight,
+    interaction: app.renderer.plugins.interaction // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+});
+
 export const scene = new PIXI.Container();
 
 export const sceneRect = new PIXI.Graphics();
@@ -29,7 +37,9 @@ sceneRect.endFill();
 
 scene.addChild(sceneRect);
 
-app.stage.addChild(scene);
+app.stage.addChild(viewport);
+
+viewport.addChild(scene);
 
 export const camera = new PIXI.Container();
 camera.dragging = false;

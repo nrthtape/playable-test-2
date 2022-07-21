@@ -1,6 +1,7 @@
-import {app} from "./app.js";
+import {app, viewport, scene} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {uiGroup} from "./start.js";
+import {uiGroup, player, cameraSpeed} from "./start.js";
+import {resizeGame} from "./resize.js";
 
 export class Bar extends PIXI.Container{
 
@@ -134,6 +135,7 @@ export class Bar extends PIXI.Container{
 
                     this.fillStars(i);
                     this.blinkStar(i);
+                    player.growth();
                     star.catched = true;
                 }
             }
