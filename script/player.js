@@ -26,6 +26,13 @@ export class Player extends PIXI.Container{
             group: uiGroup,
             y: -175
         });
+
+        this._growTimes = [];
+
+        for (let i = 0; i < 10; i++){
+
+            this._growTimes.push({end: false, timer: 0});
+        }
     }
 
     get cat(){
@@ -78,35 +85,44 @@ export class Player extends PIXI.Container{
         }
     }
 
-    growth(obj){
+    scaleAnim(size){
 
         const tween = PIXI.tweenManager.createTween(this);
 
         tween.to({
-            width: this.width * 1.2,
-            height: this.height * 1.2
+            width: this.width * size,
+            height: this.height * size
         });
         tween.time = 1000;
         tween.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
         tween.start();
-        tween.on("end", function(){
+        tween.on("end", function (){
             tween.remove();
-        })
-
-        const tween2 = PIXI.tweenManager.createTween(viewport);
-
-        tween2.to({
-            x: + this.width / 2 / 1.2,
-            y: + this.height / 2 / 1.2,
-            width: viewport.width / 1.2,
-            height: viewport.height / 1.2
         });
-        tween2.time = 1000;
-        tween2.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
-        tween2.start();
-        tween2.on("end", function(){
-            tween2.remove();
-        })
+    }
+
+    grow(value){
+
+        for (let i = 1; i <= this._growTimes.length; i++){
+
+            let grow = this._growTimes[i - 1];
+
+            if (value >= 15 * i){
+
+                if (!grow.end){
+
+                    this.scaleAnim(1.15);
+
+                    grow.end = true;
+                }
+
+                if (grow.timer < 50){
+
+                    viewport.zoom(1 + this.scale.x * 2, true);
+                    grow.timer++;
+                }
+            }
+        }
     }
 }
 

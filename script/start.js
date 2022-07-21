@@ -6,7 +6,7 @@ import {config} from "./config.js";
 import {Bar} from "./bar.js";
 
 //Declare variables for images
-export let  player, playerSpeed,
+export let  player,
             car, car_count,
             bar,
             style,
@@ -38,10 +38,7 @@ export function setup(){
     scene.addChild(player);
 
     bar = new Bar();
-    // bar.starsFill(5);
-    // bar.starsJump(1);
     bar.progress(0);
-    // bar.scale.set(5)
 
     app.stage.addChild(bar);
 
@@ -83,6 +80,7 @@ export let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 export function gameLoop(delta){
 
     bar.progress(Math.round(player.score));
+    player.grow(Math.round(player.score));
 
     //camera function?
 
@@ -129,8 +127,13 @@ export function gameLoop(delta){
         player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
 
-        // console.log(player.position);
-        // scene.scale.set(1 / player.scale.x);
+        console.log(player.x);
+        // viewport.scale.set(1 / player.scale.x);
+        // scene.anchor.set(0);
+        // scene.x = (player.x - player.x / player.scale.x) / 2;
+        // scene.y = (player.y - player.y / player.scale.y) / 2;
+        // console.log(Math.round(player.x * player.scale.x + (scene.x - config.width / 2)))
+        // console.log("scene: " + (scene.x - config.width / 2))
         // scene.y = 1 / player.scale.y;
     }
 
