@@ -4,7 +4,7 @@ import {playerGroup, uiGroup} from "./start.js";
 
 export class Player extends PIXI.Container{
 
-    constructor(x, y){
+    constructor(){
 
         super();
 
@@ -37,29 +37,37 @@ export class Player extends PIXI.Container{
         return this._score;
     }
 
-    eat(food, speed){
+    eat(food){
 
         const   x = this.x + this._cat.x,
                 y = this.y + this._cat.y + 10,
                 delta = app.ticker.deltaTime,
-                dist = getDistance(food, {x: x, y: y});
+                speed = 0.01 * food.catchTime,
+                dist = getDistance(food, {x: x, y: y})
 
-        food.x = lerp(food.x, x, speed * delta);
-        food.y = lerp(food.y, y, speed * delta);
+        food.x = linear(food.x, x, speed * delta);
+        food.y = linear(food.y, y, speed * delta);
 
-        let minDist = 200;
+        let minDist = 100;
 
         if (dist < minDist){
 
-            if (food.scale.x > 0.1){
+            if (food.scale.x > 0.25){
 
-                food.angle += 5 / minDist * (minDist - dist) * delta;
                 food.scale.set(1 / minDist * dist);
+
+                if (food.random > 0.5){
+
+                    food.angle += 5 / minDist * (minDist - dist) * delta;
+                }
+                else{
+
+                    food.angle -= 5 / minDist * (minDist - dist) * delta;
+                }
             }
             else{
 
                 food.parent.removeChild(food);
-                food.catchTime = 0;
                 this._score += food.score;
             }
         }
@@ -75,7 +83,8 @@ function getDistance(p1, p2) {
     return Math.hypot(a, b);
 }
 
-// Linear interpolation
-function lerp(a, b, n) {
+// Linear interpolation like Unity lerp()
+function linear(a, b, n) {
+
     return (1 - n) * a + n * b;
 }

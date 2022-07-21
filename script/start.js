@@ -3,11 +3,12 @@ import {resizeGame} from "./resize.js";
 import {getSpriteByConfig} from "./resourses.js";
 import {Player} from "./player.js";
 import {config} from "./config.js";
+import {Bar} from "./bar.js";
 
 //Declare variables for images
 export let  player, playerSpeed,
             car, car_count,
-            fpsCounter,
+            bar,
             style,
             grid,
             uiGroup, bgGroup, cityGroup, playerGroup
@@ -27,6 +28,14 @@ export function setup(){
 
     player = new Player();
     scene.addChild(player);
+
+    bar = new Bar();
+    // bar.starsFill(5);
+    // bar.starsJump(1);
+    bar.progress(0);
+    // bar.scale.set(5)
+
+    app.stage.addChild(bar);
 
     car_count = 100;
 
@@ -48,9 +57,6 @@ export function setup(){
             y: Math.random() * scene.height / 2,
             group: cityGroup
         });
-
-        sprite.playerched = false;
-        sprite.playerchTime = 0;
     }
 
     // player.parentGroup = playerGroup;
@@ -84,22 +90,20 @@ export function start(){
 
     subscribe(camera);
 
-    // app.ticker.maxFPS = 30;
     app.ticker.add(gameLoop);
-
-    // scene.scale.set(0.5);
-    // player.scale.set(1 / 0.5);
-    // player.x /= 0.5
-    // player.y /= 0.5
 }
 
 let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
 let count = 0;
 
+let playerSize = 1;
+
 export function gameLoop(delta){
 
-    playerSpeed.text = "Cars: " + Math.round(player.score);
+    playerSpeed.text = "Cars: " + bar.getValue;
+
+    bar.progress(Math.round(player.score));
 
     //camera function?
 
@@ -117,72 +121,62 @@ export function gameLoop(delta){
 
     if (cameraSpeed !== 0){
 
-        if (scene.x > config.worldWidth / 2){
+        if (scene.x > config.worldWidth / 2 - player.cat.width / 2){
 
-            offsetX = scene.x - config.worldWidth / 2;
+            offsetX = scene.x - config.worldWidth / 2 + player.cat.width / 2;
         }
-        else if (scene.x < config.worldWidth / 2 * -1){
+        else if (scene.x < config.worldWidth / 2 * -1 + player.cat.width / 2){
 
-            offsetX = scene.x - config.worldWidth / 2 * -1;
+            offsetX = scene.x - config.worldWidth / 2 * -1 - player.cat.width / 2;
         }
         else{
             offsetX = 0;
         }
 
-        if (scene.y > config.worldHeight / 2){
+        if (scene.y > config.worldHeight / 2 - player.cat.height / 2){
 
-            offsetY = scene.y - config.worldHeight / 2;
+            offsetY = scene.y - config.worldHeight / 2 + player.cat.height / 2;
         }
-        else if (scene.y < config.worldHeight / 2 * -1){
+        else if (scene.y < config.worldHeight / 2 * -1 + player.cat.height / 2){
 
-            offsetY = scene.y - config.worldHeight / 2 * -1;
+            offsetY = scene.y - config.worldHeight / 2 * -1 - player.cat.height / 2;
         }
         else{
             offsetY = 0;
         }
 
-        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
-        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+        scene.x -= cameraSpeed / playerSize * delta * Math.cos(cameraAngle) + offsetX;
+        scene.y -= cameraSpeed / playerSize * delta * Math.sin(cameraAngle) + offsetY;
         player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
     }
 
-    // dinner time!
+    scene.scale.set(1 / playerSize);
+    player.scale.set(playerSize);
+
+    // console.log();
+
+    // DINNER TIME
     for (let i = 0; i < scene.children.length; i++){
 
-        let car = scene.children[i];
+        let food = scene.children[i];
 
-        if (car !== player &&
-            car !== sceneRect
-        ){
+        if (food.food){
 
-            if (rectIntersect(car, player.cat)){
+            if (rectIntersect(food, player.cat)){
 
-                if (!car.playerched){
+                if (!food.catched){
 
-                    car.playerched = true;
+                    food.catched = true;
                 }
             }
-        }
-    }
 
-    for (let i = 0; i < scene.children.length; i++){
+            if (food.catched){
 
-        let car = scene.children[i];
+                food.catchTime += delta;
 
-        if (car !== player &&
-            car !== sceneRect
-        ){
-
-            if (car.playerched){
-
-                car.playerchTime += delta;
-
-                let speed = 0.01 * car.playerchTime;
-
-                player.eat(car, speed);
+                player.eat(food);
             }
-
         }
     }
 
@@ -239,6 +233,7 @@ function onDragEnd() {
 }
 
 function onDragMove() {
+
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);

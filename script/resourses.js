@@ -12,7 +12,8 @@ export function getSpriteByConfig(config){
         anchor: [0.5, 0.5],
         scale: 1,
         score: 1,
-        mask: false
+        mask: false,
+        food: true
     }, config);
 
     const atlas = PIXI.Loader.shared.resources["images/atlas.json"].textures;
@@ -27,6 +28,11 @@ export function getSpriteByConfig(config){
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
     sprite.score = config.score;
+    sprite.food = config.food;
+    sprite.random = Math.random();
+
+    sprite.catched = false;
+    sprite.catchTime = 0;
 
     config.parent.addChild(sprite);
 
