@@ -1,6 +1,5 @@
-import {camera, scene} from "./app.js";
-import {config} from "./config.js";
-import {player} from "./start.js";
+import {game, camera, scene} from "./app.js";
+import {player} from "./player.js";
 
 let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
 
@@ -20,12 +19,12 @@ export function cameraMove(delta){
 
     if (cameraSpeed !== 0) {
 
-        if (scene.x > config.worldWidth / 2 - player.cat.width / 2) {
+        if (scene.x > game.worldWidth / 2 - player.cat.width * player.scale.x / 2) {
 
-            offsetX = scene.x - config.worldWidth / 2 + player.cat.width / 2;
-        } else if (scene.x < config.worldWidth / 2 * -1 + player.cat.width / 2) {
+            offsetX = scene.x - game.worldWidth / 2 + player.cat.width * player.scale.x / 2;
+        } else if (scene.x < game.worldWidth / 2 * -1 + player.cat.width * player.scale.x / 2) {
 
-            offsetX = scene.x - config.worldWidth / 2 * -1 - player.cat.width / 2;
+            offsetX = scene.x - game.worldWidth / 2 * -1 - player.cat.width * player.scale.x / 2;
         } else {
             offsetX = 0;
         }
@@ -33,12 +32,12 @@ export function cameraMove(delta){
         scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
         player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
 
-        if (scene.y > config.worldHeight / 2 - player.cat.height / 2) {
+        if (scene.y > game.worldHeight / 2 - player.cat.height * player.scale.y / 2) {
 
-            offsetY = scene.y - config.worldHeight / 2 + player.cat.height / 2;
-        } else if (scene.y < config.worldHeight / 2 * -1 + player.cat.height / 2) {
+            offsetY = scene.y - game.worldHeight / 2 + player.cat.height * player.scale.y / 2;
+        } else if (scene.y < game.worldHeight / 2 * -1 + player.cat.height * player.scale.y / 2) {
 
-            offsetY = scene.y - config.worldHeight / 2 * -1 - player.cat.height / 2;
+            offsetY = scene.y - game.worldHeight / 2 * -1 - player.cat.height * player.scale.y / 2;
         } else {
             offsetY = 0;
         }

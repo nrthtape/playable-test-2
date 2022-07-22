@@ -1,13 +1,14 @@
-import {app, sceneRect, scene, camera, viewport} from "./app.js";
+import {app, game, sceneRect, scene, camera, viewport} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {Player} from "./player.js";
+import {player, initPlayer} from "./player.js";
 import {Bar} from "./bar.js";
 import {cameraMove, subscribe} from "./camera.js";
+import {initCity} from "./city.js";
+import {initRoad} from "./road.js";
 
 //Declare variables for images
-export let  player,
-            car, car_count,
+export let  car, car_count,
             bar,
             style,
             grid,
@@ -25,7 +26,6 @@ export function setup(){
         sprite.zOrder = sprite.y;
     });
 
-    app.stage.sortableChildren = true;
     app.stage.addChild(new PIXI.display.Layer(cityGroup));
     app.stage.addChild(new PIXI.display.Layer(uiGroup));
     app.stage.addChild(new PIXI.display.Layer(flyingGroup));
@@ -34,15 +34,18 @@ export function setup(){
 
     sceneRect.parentGroup = bgGroup;
 
-    player = new Player();
-    scene.addChild(player);
-
     bar = new Bar();
     bar.progress(0);
 
     app.stage.addChild(bar);
 
-    car_count = 100;
+    initPlayer({x: game.worldWidth / 2, y: game.worldHeight / 2});
+
+    initCity();
+
+    initRoad();
+
+    car_count = 99;
 
     for (let i = 0; i < car_count; i++){
 
@@ -58,10 +61,12 @@ export function setup(){
         sprite = getSpriteByConfig({
             name: name,
             parent: scene,
-            x: Math.random() * scene.width / 2,
-            y: Math.random() * scene.height / 2,
-            group: cityGroup
+            group: cityGroup,
+            score: 1
         });
+
+        sprite.x += Math.random() * (game.worldWidth + sprite.width / 2);
+        sprite.y += Math.random() * (game.worldHeight + sprite.height / 2);
     }
 }
 

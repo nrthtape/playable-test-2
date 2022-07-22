@@ -1,6 +1,6 @@
-import {app, camera, viewport, scene} from "./app.js";
+import {app, camera, viewport, scene, game} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {flyingGroup, player, playerGroup, uiGroup} from "./start.js";
+import {flyingGroup, playerGroup, uiGroup} from "./start.js";
 
 export class Player extends PIXI.Container{
 
@@ -123,6 +123,25 @@ export class Player extends PIXI.Container{
             }
         }
     }
+}
+
+export let player;
+
+export function initPlayer(config){
+
+    config = Object.assign({
+        x: 0,
+        y: 0
+    }, config);
+
+    player = new Player();
+
+    scene.addChild(player);
+
+    scene.x += game.worldWidth / 2 - player.cat.width / 2 - config.x;
+    player.x -= game.worldWidth / 2 - player.cat.width / 2 - config.x;
+    scene.y += game.worldHeight / 2 - player.cat.height / 2 - config.y;
+    player.y -= game.worldHeight / 2 - player.cat.height / 2 - config.y;
 }
 
 // Get distance between two points

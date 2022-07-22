@@ -1,6 +1,7 @@
 import {app, viewport, scene} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {uiGroup, player} from "./start.js";
+import {uiGroup} from "./start.js";
+import {player} from "./player.js";
 import {resizeGame} from "./resize.js";
 
 export class Bar extends PIXI.Container{
@@ -57,7 +58,6 @@ export class Bar extends PIXI.Container{
 
         this._stars = new PIXI.Container();
         this._stars.y = -85;
-        this._stars.showed = false;
         this.addChild(this._stars);
 
         for (let i = 0; i < 5; i++){

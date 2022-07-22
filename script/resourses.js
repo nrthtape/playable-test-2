@@ -1,4 +1,4 @@
-import {app} from "./app.js";
+import {app, game, scene} from "./app.js";
 
 //Add sprite by config and return
 export function getSpriteByConfig(config){
@@ -8,25 +8,35 @@ export function getSpriteByConfig(config){
         parent: app.stage,
         x: 0,
         y: 0,
-        rotation: 0,
+        angle: 0,
         anchor: [0.5, 0.5],
         scale: 1,
         score: 1,
         mask: false,
+        player: false,
         food: true
     }, config);
+
+    let offset = {x: 0, y: 0};
+
+    if (config.parent === scene){
+
+        offset.x = (game.width - game.worldWidth) / 2;
+        offset.y = (game.height - game.worldHeight) / 2;
+    }
 
     const atlas = PIXI.Loader.shared.resources["atlas"].textures;
 
     const sprite = new config.type(atlas[config.name + ".png"]);
-    sprite.x = config.x;
-    sprite.y = config.y;
+    sprite.x = config.x + offset.x;
+    sprite.y = config.y + offset.y;
     sprite.anchor.x = config.anchor[0];
     sprite.anchor.y = config.anchor[1];
     sprite.mask = config.mask;
-    sprite.rotation = config.rotation;
+    sprite.angle = config.angle;
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
+
     sprite.score = config.score;
     sprite.food = config.food;
     sprite.random = Math.random();
