@@ -136,6 +136,7 @@ export class Bar extends PIXI.Container{
                     this.fillStars(i);
                     this.blinkStar(i);
                     star.catched = true;
+                    PIXI.sound.play("star");
                 }
             }
         }

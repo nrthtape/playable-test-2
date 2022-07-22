@@ -85,6 +85,7 @@ export class Player extends PIXI.Container{
 
                 food.parent.removeChild(food);
                 this._score += food.score;
+                PIXI.sound.play("tap", {volume: 2});
             }
         }
     }

@@ -3,16 +3,7 @@ import {app, game, scene} from "./app.js";
 import {bgGroup} from "./start.js";
 import {player} from "./player.js";
 
-let sceneMask;
-
 export function initRoad(){
-
-    sceneMask = new PIXI.Graphics();
-    sceneMask.beginFill(0x4cc0cd);
-    sceneMask.drawRect((game.width - game.worldWidth) / 2, (game.height - game.worldHeight) / 2, game.worldWidth, game.worldHeight);
-    sceneMask.endFill();
-
-    scene.addChild(sceneMask);
 
     // vertical
     buildRoad({length: 6, angle: 0, x: 1180});
@@ -40,7 +31,7 @@ function buildRoad(config){
 
     for (let i = 0; i < config.length; i++){
 
-        let tile = getSpriteByConfig({name: "road_tile", food: false, parent: scene, mask: sceneMask, group: bgGroup})
+        let tile = getSpriteByConfig({name: "road_tile", food: false, parent: scene, group: bgGroup})
 
         tile.angle = config.angle;
 

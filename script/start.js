@@ -101,6 +101,7 @@ export function gameLoop(delta){
 
                 if (!food.catched){
 
+                    // PIXI.sound.play("swish");
                     food.catched = true;
                 }
             }

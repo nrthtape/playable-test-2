@@ -52,6 +52,13 @@ sceneRect.endFill();
 scene.addChild(sceneRect);
 viewport.addChild(scene);
 
+export const sceneMask = new PIXI.Graphics();
+sceneMask.beginFill(0x4cc0cd);
+sceneMask.drawRect((game.width - game.worldWidth) / 2, (game.height - game.worldHeight) / 2, game.worldWidth, game.worldHeight);
+sceneMask.endFill();
+
+scene.addChild(sceneMask);
+
 export const camera = new PIXI.Container();
 camera.dragging = false;
 
@@ -66,7 +73,11 @@ app.stage.addChild(camera);
 
 //Load an image and run the `setup` function when it's done
 PIXI.Loader.shared
-    .add("atlas", "images/atlas.json")
+    .add("atlas", "image/atlas.json")
+    .add("tap", "sound/tap.mp3")
+    .add("tap2", "sound/tap2.mp3")
+    .add("swish", "sound/swish.mp3")
+    .add("star", "sound/star.mp3")
     .load(setup)
     .onComplete.add(start)
 

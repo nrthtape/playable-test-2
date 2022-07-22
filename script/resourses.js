@@ -1,4 +1,4 @@
-import {app, game, scene} from "./app.js";
+import {app, game, scene, sceneMask} from "./app.js";
 
 //Add sprite by config and return
 export function getSpriteByConfig(config){
@@ -19,7 +19,11 @@ export function getSpriteByConfig(config){
 
     let offset = {x: 0, y: 0};
 
+    let mask = config.mask;
+
     if (config.parent === scene){
+
+        mask = sceneMask;
 
         offset.x = (game.width - game.worldWidth) / 2;
         offset.y = (game.height - game.worldHeight) / 2;
@@ -32,7 +36,7 @@ export function getSpriteByConfig(config){
     sprite.y = config.y + offset.y;
     sprite.anchor.x = config.anchor[0];
     sprite.anchor.y = config.anchor[1];
-    sprite.mask = config.mask;
+    sprite.mask = mask;
     sprite.angle = config.angle;
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
