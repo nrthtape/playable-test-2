@@ -51,7 +51,7 @@ export class Player extends PIXI.Container{
                 dist = getDistance(food, {x: x, y: y}),
                 minDist = 300,
                 delta = app.ticker.deltaTime,
-                vacuumSpeed = 0.005 * food.catchTime * delta * 2,
+                vacuumSpeed = 0.005 * food.catchTime * delta,
                 scaleRadius = (30 / 2) - (30 * food.random * this.scale.x),
                 scaleSpeed = 5,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
@@ -120,9 +120,9 @@ export class Player extends PIXI.Container{
                     grow.end = true;
                 }
 
-                if (grow.timer < 100){
+                if (grow.timer * app.ticker.deltaTime < 25){
 
-                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 1.5 * app.ticker.deltaTime, true);
+                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 2, true);
                     grow.timer++;
                 }
             }
