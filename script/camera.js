@@ -101,8 +101,8 @@ function onDragMove() {
         cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 10;
 
         // Смещение точки нажатия для более удобного управления
-        // this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
-        // this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
+        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
+        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
 
         // Проверка смещения точки нажатия
         // this.addChild(
