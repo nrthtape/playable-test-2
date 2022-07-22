@@ -26,26 +26,30 @@ export function cameraMove(delta){
 
     if (cameraSpeed !== 0) {
 
-        if (scene.x > game.worldWidth / 2 - player.cat.width * player.scale.x / 2) {
+        if (scene.x > game.worldWidth / 2 - (player.cat.width - 150) * player.scale.x / 2) {
 
-            offsetX = scene.x - game.worldWidth / 2 + player.cat.width * player.scale.x / 2;
-        } else if (scene.x < game.worldWidth / 2 * -1 + player.cat.width * player.scale.x / 2) {
+            offsetX = scene.x - game.worldWidth / 2 + (player.cat.width - 150) * player.scale.x / 2;
+        }
+        else if (scene.x < game.worldWidth / 2 * -1 + (player.cat.width - 150) * player.scale.x / 2) {
 
-            offsetX = scene.x - game.worldWidth / 2 * -1 - player.cat.width * player.scale.x / 2;
-        } else {
+            offsetX = scene.x - game.worldWidth / 2 * -1 - (player.cat.width - 150) * player.scale.x / 2;
+        }
+        else {
             offsetX = 0;
         }
 
         scene.x -= cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
         player.x += cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
 
-        if (scene.y > game.worldHeight / 2 - player.cat.height * player.scale.y / 2) {
+        if (scene.y > game.worldHeight / 2 - (player.cat.height - 100) * player.scale.y / 2) {
 
-            offsetY = scene.y - game.worldHeight / 2 + player.cat.height * player.scale.y / 2;
-        } else if (scene.y < game.worldHeight / 2 * -1 + player.cat.height * player.scale.y / 2) {
+            offsetY = scene.y - game.worldHeight / 2 + (player.cat.height - 100) * player.scale.y / 2;
+        }
+        else if (scene.y < game.worldHeight / 2 * -1 + (player.cat.height - 150) * player.scale.y / 2) {
 
-            offsetY = scene.y - game.worldHeight / 2 * -1 - player.cat.height * player.scale.y / 2;
-        } else {
+            offsetY = scene.y - game.worldHeight / 2 * -1 - (player.cat.height - 150) * player.scale.y / 2;
+        }
+        else {
             offsetY = 0;
         }
 
