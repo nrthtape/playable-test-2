@@ -1,15 +1,22 @@
-import {game, camera, scene} from "./app.js";
+import {app, game, camera, scene} from "./app.js";
 import {player} from "./player.js";
 
-let cameraAngle = 0, cameraSpeed = 0, offsetX = 0, offsetY = 0;
+let cameraAngle = 0,
+    cameraSpeed = 0,
+    offsetX = 0,
+    offsetY = 0
 
 export function cameraMove(delta){
+
+    let speedFix = 1 + (player.scale.x - 1) / 2;
+
+    console.log(speedFix);
 
     if (!camera.dragging){
 
         if (cameraSpeed > 0){
 
-            cameraSpeed -= 0.15 * delta;
+            cameraSpeed -= 0.15;
         }
         else{
 
@@ -29,8 +36,8 @@ export function cameraMove(delta){
             offsetX = 0;
         }
 
-        scene.x -= cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
-        player.x += cameraSpeed * delta * Math.cos(cameraAngle) + offsetX;
+        scene.x -= cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
+        player.x += cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
 
         if (scene.y > game.worldHeight / 2 - player.cat.height * player.scale.y / 2) {
 
@@ -42,8 +49,8 @@ export function cameraMove(delta){
             offsetY = 0;
         }
 
-        scene.y -= cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
-        player.y += cameraSpeed * delta * Math.sin(cameraAngle) + offsetY;
+        scene.y -= cameraSpeed * speedFix * delta * Math.sin(cameraAngle) + offsetY;
+        player.y += cameraSpeed * speedFix * delta * Math.sin(cameraAngle) + offsetY;
     }
 }
 
@@ -84,7 +91,9 @@ function onDragMove() {
     if (this.dragging) {
 
         const newPosition = this.data.getLocalPosition(this.parent);
+
         const maxDiff = 100;
+
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
@@ -92,8 +101,8 @@ function onDragMove() {
         cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 10;
 
         // Смещение точки нажатия для более удобного управления
-        this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
-        this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
+        // this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
+        // this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
 
         // Проверка смещения точки нажатия
         // this.addChild(

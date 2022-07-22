@@ -62,7 +62,7 @@ cameraRect.endFill();
 cameraRect.alpha = 0;
 
 camera.addChild(cameraRect);
-viewport.addChild(camera);
+app.stage.addChild(camera);
 
 //Load an image and run the `setup` function when it's done
 PIXI.Loader.shared
