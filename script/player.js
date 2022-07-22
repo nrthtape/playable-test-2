@@ -47,33 +47,38 @@ export class Player extends PIXI.Container{
     eat(food){
 
         let     x = this.x + this._cat.x,
-                y = this.y + this._cat.y + 10,
+                y = this.y + this._cat.y,
+                dist = getDistance(food, {x: x, y: y}),
+                minDist = 300,
                 delta = app.ticker.deltaTime,
-                speed = 0.01 * food.catchTime * delta,
-                dist = getDistance(food, {x: x, y: y})
+                vacuumSpeed = 0.005 * food.catchTime * delta * 2,
+                scaleRadius = (30 / 2) - (30 * food.random * this.scale.x),
+                scaleSpeed = 5,
+                angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
 
-        food.x = linear(food.x, x, speed);
-        food.y = linear(food.y, y, speed);
-
-        let minDist = 200;
+        food.x = linear(food.x, x + scaleRadius, vacuumSpeed);
+        food.y = linear(food.y, y + scaleRadius, vacuumSpeed);
 
         if (dist < minDist){
 
-            speed = 1;
+            vacuumSpeed = 1;
 
             // food.parentGroup = flyingGroup;
 
-            if (food.scale.x > 0.1){
+            if (food.scale.x > 0){
 
-                food.scale.set(1 / minDist * dist);
+                // food.scale.set(1 - (1 / minDist));
+
+                food.width -= food.texture.width / minDist * delta * scaleSpeed;
+                food.height -= food.texture.height / minDist * delta * scaleSpeed;
 
                 if (food.random > 0.5){
 
-                    food.angle += 5 / minDist * (minDist - dist) * delta;
+                    food.angle += angleSpeed;
                 }
                 else{
 
-                    food.angle -= 5 / minDist * (minDist - dist) * delta;
+                    food.angle -= angleSpeed;
                 }
             }
             else{
@@ -117,7 +122,7 @@ export class Player extends PIXI.Container{
 
                 if (grow.timer < 100){
 
-                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 1.5, true);
+                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 1.5 * app.ticker.deltaTime, true);
                     grow.timer++;
                 }
             }

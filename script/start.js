@@ -52,7 +52,7 @@ export function setup(){
         let name, sprite;
 
         if (Math.random() > 0.5){
-            name = "car_yellow";
+            name = "fish_cookie";
         }
         else{
             name = "car_violet";
@@ -94,7 +94,10 @@ export function gameLoop(delta){
 
         if (food.food){
 
-            if (rectIntersect(food, player.cat)){
+            if (
+                rectIntersect(player.cat, food, 15) &&
+                compareSize(player.cat, food, 0)
+            ){
 
                 if (!food.catched){
 
@@ -120,13 +123,23 @@ window.onresize = function(){
 }
 
 // Check intersect between two objects
-function rectIntersect(a, b){
+function rectIntersect(a, b, offset = 0){
 
     let aBox = a.getBounds();
     let bBox = b.getBounds();
 
-    return  aBox.x + aBox.width > bBox.x &&
-            aBox.x < bBox.x + bBox.width &&
-            aBox.y + aBox.height > bBox.y &&
-            aBox.y < bBox.y + bBox.height;
+    return  aBox.x + aBox.width - offset > bBox.x &&
+            aBox.x + offset < bBox.x + bBox.width &&
+            aBox.y + aBox.height - offset > bBox.y &&
+            aBox.y + offset < bBox.y + bBox.height;
+}
+
+// Return true if A width larger B
+function compareSize(a, b, offset = 0){
+
+    let aBox = a.getBounds();
+    let bBox = b.getBounds();
+
+    return  aBox.width - offset > bBox.width ||
+            aBox.width - offset > bBox.height
 }
