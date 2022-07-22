@@ -16,7 +16,7 @@ export function cameraMove(delta){
 
         if (cameraSpeed > 0){
 
-            cameraSpeed -= 0.15;
+            cameraSpeed -= 0.1 * delta;
         }
         else{
 
