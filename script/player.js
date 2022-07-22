@@ -44,6 +44,37 @@ export class Player extends PIXI.Container{
         return this._score;
     }
 
+    scoreAnim(value){
+
+        let text = new PIXI.Text("+" + value,
+            new PIXI.TextStyle({
+                fill: "white",
+                fontFamily: "fishdom",
+                fontSize: 70,
+                stroke: "#0c3278",
+                strokeThickness: 5
+            })
+        );
+        text.anchor.set(0.5);
+        text.y = -250;
+        text.parentGroup = uiGroup;
+
+        this.addChild(text);
+
+        const tween = PIXI.tweenManager.createTween(text);
+
+        tween.to({
+            y: text.y - 250,
+            alpha: 0
+        });
+        tween.time = 500;
+        tween.easing = PIXI.tween.Easing.inSine();
+        tween.start();
+        tween.on("end", function (){
+            tween.remove();
+        });
+    }
+
     eat(food){
 
         let     x = this.x + this._cat.x,
@@ -85,6 +116,7 @@ export class Player extends PIXI.Container{
 
                 food.parent.removeChild(food);
                 this._score += food.score;
+                this.scoreAnim(food.score);
                 PIXI.sound.play("tap", {volume: 2});
             }
         }
