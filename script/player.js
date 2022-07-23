@@ -20,10 +20,6 @@ export class Player extends PIXI.Container{
             hitBox: {custom: true, y: -15, width: 200, height: 120, show: true}
         });
 
-        // this._cat.hitBox =
-        // this._cat.addChild(this._cat.hitBox)
-        // this._cat.hitBox.alpha = 0
-
         this.nickname = getSpriteByConfig({
             name: "nickname",
             parent: this,
@@ -88,12 +84,12 @@ export class Player extends PIXI.Container{
                 minDist = 300,
                 delta = app.ticker.deltaTime,
                 vacuumSpeed = 0.005 * food.time * delta,
-                scaleRadius = (30 / 2) - (30 * food.random * this.scale.x),
+                scaleRadius = 0,
                 scaleSpeed = 5,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
 
-        food.x = linear(food.x, x + scaleRadius, vacuumSpeed);
-        food.y = linear(food.y, y + scaleRadius, vacuumSpeed);
+        food.x = linear(food.x, x, vacuumSpeed);
+        food.y = linear(food.y, y, vacuumSpeed);
 
         if (dist < minDist){
 

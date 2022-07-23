@@ -39,35 +39,11 @@ export function setup(){
 
     app.stage.addChild(bar);
 
-    initPlayer({x: game.worldWidth / 2, y: game.worldHeight / 2});
+    initPlayer({x: game.worldWidth / 2 - 1000, y: game.worldHeight / 2});
 
     initCity();
 
     initRoad();
-
-    car_count = 99;
-
-    for (let i = 0; i < car_count; i++){
-
-        let name, sprite;
-
-        if (Math.random() > 0.5){
-            name = "fish_cookie";
-        }
-        else{
-            name = "car_violet";
-        }
-
-        sprite = getSpriteByConfig({
-            name: name,
-            parent: scene,
-            group: cityGroup,
-            score: 1
-        });
-
-        sprite.x += Math.random() * (game.worldWidth + sprite.width / 2);
-        sprite.y += Math.random() * (game.worldHeight + sprite.height / 2);
-    }
 }
 
 //This function will run when the image has loaded

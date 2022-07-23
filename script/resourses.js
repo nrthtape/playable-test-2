@@ -15,7 +15,7 @@ export function getSpriteByConfig(config){
         mask: false,
         player: false,
         food: true,
-        hitBox: {custom: false, show: true}
+        hitBox: {custom: false}
     }, config);
 
     const atlas = PIXI.Loader.shared.resources["atlas"].textures;
@@ -41,7 +41,6 @@ export function getSpriteByConfig(config){
 
     sprite.hitBox = addHitBox(config.hitBox);
 
-
     if (config.parent === scene){
 
         sprite.mask = sceneMask;
@@ -61,7 +60,8 @@ function addHitBox(config){
         x: 0,
         y: 0,
         width: 0,
-        height: 0
+        height: 0,
+        show: true
     }, config);
 
     let sprite = config.sprite;
@@ -89,13 +89,11 @@ function addHitBox(config){
     }
 
     sprite.addChild(box);
-    // box.x = sprite.x + sprite.parent.x
-    // box.y = sprite.y + sprite.parent.y
 
     return box;
 }
 
 function randomColor(){
 
-    return Math.floor(Math.random()*16777215).toString(16);
+    return Math.floor(Math.random() * 16777215).toString(16);
 }
