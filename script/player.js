@@ -17,10 +17,7 @@ export class Player extends PIXI.Container{
             name: "cat",
             parent: this,
             group: playerGroup,
-            hitBox: new PIXI.Graphics()
-                .beginFill(0x00dd00)
-                .drawRect(-90, -80, 180, 120)
-                .endFill()
+            hitBox: {custom: true, y: -15, width: 200, height: 120, show: true}
         });
 
         // this._cat.hitBox =
@@ -161,9 +158,9 @@ export class Player extends PIXI.Container{
                     temp.increased = true;
                 }
 
-                if ((temp.time * app.ticker.deltaTime) < 25){
+                if (temp.time * app.ticker.deltaTime < 5){
 
-                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 2, true);
+                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 25 * app.ticker.deltaTime, true);
                     temp.time++;
                 }
             }

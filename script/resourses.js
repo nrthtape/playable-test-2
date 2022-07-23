@@ -15,8 +15,7 @@ export function getSpriteByConfig(config){
         mask: false,
         player: false,
         food: true,
-        hitBox: null,
-        hitBoxAlpha: 0.5
+        hitBox: {custom: false, show: true}
     }, config);
 
     const atlas = PIXI.Loader.shared.resources["atlas"].textures;
@@ -38,18 +37,10 @@ export function getSpriteByConfig(config){
 
     sprite.time = 0;
 
-    if (config.hitBox === null){
+    config.hitBox.sprite = sprite;
 
-        sprite.hitBox = sprite;
-    }
-    else{
+    sprite.hitBox = addHitBox(config.hitBox);
 
-        sprite.hitBox = config.hitBox;
-        sprite.hitBox.visible = 0
-        sprite.addChild(sprite.hitBox)
-    }
-
-    sprite.hitBoxAlpha = config.hitBoxAlpha
 
     if (config.parent === scene){
 
@@ -59,27 +50,49 @@ export function getSpriteByConfig(config){
         sprite.y += (game.height - game.worldHeight) / 2;
     }
 
-    if (config.hitBoxAlpha > 0){
-
-        showHitBox(sprite);
-    }
-
     config.parent.addChild(sprite);
 
     return sprite;
 }
 
-function showHitBox(sprite){
+function addHitBox(config){
 
-    let bound = sprite.hitBox.getBounds();
+    config = Object.assign({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+    }, config);
+
+    let sprite = config.sprite;
+
+    let w = 0, h = 0;
+
+    if (config.custom === false) {
+
+        w = config.sprite.width;
+        h = config.sprite.height;
+    }
 
     let box = new PIXI.Graphics()
         .beginFill("0x" + randomColor())
-        .drawRect(- bound.width / 2, - bound.height / 2, bound.width, bound.height)
+        .drawRect(- (w + config.width) / 2 + config.x, - (h + config.height) / 2 + config.y, config.width + w, config.height + h)
         .endFill()
-    box.alpha = sprite.hitBoxAlpha;
+
+    if (config.show){
+
+        box.alpha = 0.5;
+    }
+    else{
+
+        box.alpha = 0;
+    }
 
     sprite.addChild(box);
+    // box.x = sprite.x + sprite.parent.x
+    // box.y = sprite.y + sprite.parent.y
+
+    return box;
 }
 
 function randomColor(){
