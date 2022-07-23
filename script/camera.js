@@ -8,7 +8,7 @@ let cameraAngle = 0,
 
 export function cameraMove(delta){
 
-    let speedFix = 1 + (player.scale.x - 1) * delta;
+    let speedFix = 1 + (player.scale.x - 1) / 2;
 
     if (!camera.dragging){
 
