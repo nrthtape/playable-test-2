@@ -31,7 +31,7 @@ function buildRoad(config){
 
     for (let i = 0; i < config.length; i++){
 
-        let tile = getSpriteByConfig({name: "road_tile", food: false, parent: scene, group: bgGroup})
+        let tile = getSpriteByConfig({name: "road_tile", food: false, parent: scene, group: bgGroup, hitBoxAlpha: 0})
 
         tile.angle = config.angle;
 

@@ -95,8 +95,8 @@ export function gameLoop(delta){
         if (food.food){
 
             if (
-                rectIntersect(player.cat, food, 15) &&
-                compareSize(player.cat, food, 0)
+                rectIntersect(player.cat, food) &&
+                compareSize(player.cat, food)
             ){
 
                 if (!food.catched){
@@ -108,7 +108,7 @@ export function gameLoop(delta){
 
             if (food.catched){
 
-                food.catchTime += delta;
+                food.time += delta;
 
                 player.eat(food);
             }
@@ -124,23 +124,25 @@ window.onresize = function(){
 }
 
 // Check intersect between two objects
-function rectIntersect(a, b, offset = 0){
+function rectIntersect(a, b){
 
-    let aBox = a.getBounds();
-    let bBox = b.getBounds();
+    let aBox = a.hitBox.getBounds();
+    let bBox = b.hitBox.getBounds();
 
-    return  aBox.x + aBox.width - offset > bBox.x &&
-            aBox.x + offset < bBox.x + bBox.width &&
-            aBox.y + aBox.height - offset > bBox.y &&
-            aBox.y + offset < bBox.y + bBox.height;
+    return  aBox.x + aBox.width > bBox.x &&
+            aBox.x < bBox.x + bBox.width &&
+            aBox.y + aBox.height > bBox.y &&
+            aBox.y < bBox.y + bBox.height;
 }
 
 // Return true if A width larger B
-function compareSize(a, b, offset = 0){
+function compareSize(a, b){
 
-    let aBox = a.getBounds();
-    let bBox = b.getBounds();
+    let aBox = a.hitBox.getBounds();
+    let bBox = b.hitBox.getBounds();
 
-    return  aBox.width - offset > bBox.width ||
-            aBox.width - offset > bBox.height
+    return  aBox.width > bBox.width ||
+            aBox.width > bBox.height ||
+            aBox.height > bBox.width ||
+            aBox.height > bBox.height
 }

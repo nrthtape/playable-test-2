@@ -1,4 +1,4 @@
-import {app, camera, viewport, scene, game} from "./app.js";
+import {app, camera, viewport, scene, game, sceneRect} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
 import {flyingGroup, playerGroup, uiGroup} from "./start.js";
 
@@ -16,8 +16,16 @@ export class Player extends PIXI.Container{
         this._cat = getSpriteByConfig({
             name: "cat",
             parent: this,
-            group: playerGroup
+            group: playerGroup,
+            hitBox: new PIXI.Graphics()
+                .beginFill(0x00dd00)
+                .drawRect(-90, -80, 180, 120)
+                .endFill()
         });
+
+        // this._cat.hitBox =
+        // this._cat.addChild(this._cat.hitBox)
+        // this._cat.hitBox.alpha = 0
 
         this.nickname = getSpriteByConfig({
             name: "nickname",
@@ -26,11 +34,11 @@ export class Player extends PIXI.Container{
             y: -175
         });
 
-        this._growTimes = [];
+        this._riseCount = [];
 
         for (let i = 0; i < 10; i++){
 
-            this._growTimes.push({end: false, timer: 0});
+            this._riseCount.push({increased: false, time: 0});
         }
     }
 
@@ -82,7 +90,7 @@ export class Player extends PIXI.Container{
                 dist = getDistance(food, {x: x, y: y}),
                 minDist = 300,
                 delta = app.ticker.deltaTime,
-                vacuumSpeed = 0.005 * food.catchTime * delta,
+                vacuumSpeed = 0.005 * food.time * delta,
                 scaleRadius = (30 / 2) - (30 * food.random * this.scale.x),
                 scaleSpeed = 5,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
@@ -140,23 +148,23 @@ export class Player extends PIXI.Container{
 
     grow(value){
 
-        for (let i = 1; i <= this._growTimes.length; i++){
+        for (let i = 1; i <= this._riseCount.length; i++){
 
-            let grow = this._growTimes[i - 1];
+            let temp = this._riseCount[i - 1];
 
             if (value >= 10 * i){
 
-                if (!grow.end){
+                if (!temp.increased){
 
                     this.scaleAnim(1.2);
 
-                    grow.end = true;
+                    temp.increased = true;
                 }
 
-                if (grow.timer * app.ticker.deltaTime < 25){
+                if ((temp.time * app.ticker.deltaTime) < 25){
 
                     viewport.zoom(easeInOutQuint(1) * this.scale.x * 2, true);
-                    grow.timer++;
+                    temp.time++;
                 }
             }
         }
