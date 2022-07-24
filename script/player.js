@@ -78,14 +78,14 @@ export class Player extends PIXI.Container{
 
     eat(food){
 
-        let     x = this.x + this._cat.x,
-                y = this.y + this._cat.y,
+        let     x = this.x + food.area.x * this.scale.x,
+                y = this.y + food.area.y * this.scale.x,
                 dist = getDistance(food, {x: x, y: y}),
                 minDist = 300,
                 delta = app.ticker.deltaTime,
                 vacuumSpeed = 0.005 * food.time * delta,
                 scaleRadius = 0,
-                scaleSpeed = 5,
+                scaleSpeed = 3 * this.scale.x,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
 
         food.x = linear(food.x, x, vacuumSpeed);
@@ -97,21 +97,21 @@ export class Player extends PIXI.Container{
 
             // food.parentGroup = flyingGroup;
 
-            if (food.scale.x > 0){
+            if (food.scale.x > 0.25){
 
                 // food.scale.set(1 - (1 / minDist));
 
                 food.width -= food.texture.width / minDist * delta * scaleSpeed;
                 food.height -= food.texture.height / minDist * delta * scaleSpeed;
 
-                if (food.random > 0.5){
-
-                    food.angle += angleSpeed;
-                }
-                else{
-
-                    food.angle -= angleSpeed;
-                }
+                // if (food.random > 0.5 * this.scale.x){
+                //
+                //     food.angle += angleSpeed;
+                // }
+                // else{
+                //
+                //     food.angle -= angleSpeed;
+                // }
             }
             else{
 

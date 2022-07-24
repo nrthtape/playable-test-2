@@ -4,7 +4,8 @@ import {player} from "./player.js";
 let cameraAngle = 0,
     cameraSpeed = 0,
     offsetX = 0,
-    offsetY = 0
+    offsetY = 0,
+    maxDiff = 100
 
 export function cameraMove(delta){
 
@@ -24,35 +25,41 @@ export function cameraMove(delta){
 
     if (cameraSpeed !== 0) {
 
-        if (scene.x > game.worldWidth / 2 - (player.cat.width - 150) * player.scale.x / 2) {
+        let tempX = game.worldWidth / 2 - (player.cat.hitBox.width) * player.scale.x / 2,
+            tempY = game.worldHeight / 2 - (player.cat.hitBox.height - 15) * player.scale.y / 2
 
-            offsetX = scene.x - game.worldWidth / 2 + (player.cat.width - 150) * player.scale.x / 2;
+        if (scene.x > tempX) {
+
+            offsetX = scene.x - tempX;
         }
-        else if (scene.x < game.worldWidth / 2 * -1 + (player.cat.width - 150) * player.scale.x / 2) {
+        else if (scene.x < - tempX) {
 
-            offsetX = scene.x - game.worldWidth / 2 * -1 - (player.cat.width - 150) * player.scale.x / 2;
+            offsetX = scene.x + tempX;
         }
         else {
             offsetX = 0;
         }
 
-        scene.x -= cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
-        player.x += cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX;
+        if (scene.y > tempY) {
 
-        if (scene.y > game.worldHeight / 2 - (player.cat.height - 100) * player.scale.y / 2) {
-
-            offsetY = scene.y - game.worldHeight / 2 + (player.cat.height - 100) * player.scale.y / 2;
+            offsetY = scene.y - tempY;
         }
-        else if (scene.y < game.worldHeight / 2 * -1 + (player.cat.height - 150) * player.scale.y / 2) {
+        else if (scene.y < - tempY) {
 
-            offsetY = scene.y - game.worldHeight / 2 * -1 - (player.cat.height - 150) * player.scale.y / 2;
+            offsetY = scene.y + tempY;
         }
         else {
             offsetY = 0;
         }
 
-        scene.y -= cameraSpeed * speedFix * delta * Math.sin(cameraAngle) + offsetY;
-        player.y += cameraSpeed * speedFix * delta * Math.sin(cameraAngle) + offsetY;
+        let moveX = cameraSpeed * speedFix * delta * Math.cos(cameraAngle) + offsetX,
+            moveY = cameraSpeed * speedFix * delta * Math.sin(cameraAngle) + offsetY
+
+        scene.x += - moveX;
+        scene.y += - moveY;
+
+        player.x += moveX;
+        player.y += moveY;
     }
 }
 
@@ -94,19 +101,17 @@ function onDragMove() {
 
         const newPosition = this.data.getLocalPosition(this.parent);
 
-        const maxDiff = 100;
-
         const xDiff = (newPosition.x - this.dragPoint.x);
         const yDiff = (newPosition.y - this.dragPoint.y);
 
         cameraAngle = Math.atan2(yDiff, xDiff);
         cameraSpeed = Math.min(maxDiff, Math.hypot(xDiff, yDiff)) / 10;
 
-        // Смещение точки нажатия для более удобного управления
+        // shift drag point
         this.dragPoint.x += cameraSpeed * Math.cos(cameraAngle) / 4;
         this.dragPoint.y += cameraSpeed * Math.sin(cameraAngle) / 4;
 
-        // Проверка смещения точки нажатия
+        // check position of drag point
         // this.addChild(
         //     new PIXI.Graphics()
         //         .beginFill(0xff0000, 1)

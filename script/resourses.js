@@ -34,6 +34,7 @@ export function getSpriteByConfig(config){
     sprite.score = config.score;
     sprite.food = config.food;
     sprite.random = Math.random();
+    sprite.area = randomArea({x: 25, y: 15});
 
     sprite.time = 0;
 
@@ -96,4 +97,11 @@ function addHitBox(config){
 function randomColor(){
 
     return Math.floor(Math.random() * 16777215).toString(16);
+}
+
+function randomArea(radius){
+    let theta = Math.random() * 2 * Math.PI,
+        rX = Math.sqrt(Math.random()) * radius.x,
+        rY = Math.sqrt(Math.random()) * radius.y
+    return {x: rX * Math.cos(theta), y: rY * Math.sin(theta)}
 }
