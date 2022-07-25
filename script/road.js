@@ -1,6 +1,7 @@
 import {getSpriteByConfig} from "./resourses.js";
-import {app, game, scene} from "./app.js";
-import {bgGroup} from "./start.js";
+import {app, game} from "./app.js";
+import {bgGroup} from "./display.js";
+import {scene} from "./camera.js";
 import {player} from "./player.js";
 
 export function initRoad(){

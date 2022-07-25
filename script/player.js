@@ -1,6 +1,7 @@
-import {app, camera, viewport, scene, game, sceneRect} from "./app.js";
+import {app, game} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {flyingGroup, playerGroup, uiGroup} from "./start.js";
+import {viewport, playerGroup, uiGroup} from "./display.js";
+import {camera, scene} from "./camera.js";
 
 export class Player extends PIXI.Container{
 
@@ -17,21 +18,21 @@ export class Player extends PIXI.Container{
             name: "cat",
             parent: this,
             group: playerGroup,
-            hitBox: {custom: true, y: -15, width: 200, height: 120, show: true}
+            hitBox: {custom: true, y: -15, width: 200, height: 120}
         });
 
-        this.nickname = getSpriteByConfig({
+        this._nickname = getSpriteByConfig({
             name: "nickname",
             parent: this,
             group: uiGroup,
             y: -175
         });
 
-        this._riseCount = [];
+        this._grow = [];
 
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < 20; i++){
 
-            this._riseCount.push({increased: false, time: 0});
+            this._grow.push({end: false, time: 0});
         }
     }
 
@@ -141,23 +142,25 @@ export class Player extends PIXI.Container{
 
     grow(value){
 
-        for (let i = 1; i <= this._riseCount.length; i++){
+        for (let i = 1; i <= this._grow.length; i++){
 
-            let temp = this._riseCount[i - 1];
+            let temp = this._grow[i - 1];
 
-            if (value >= 10 * i){
+            if (value >= 5 * i){
 
-                if (!temp.increased){
+                if (!temp.end){
 
-                    this.scaleAnim(1.2);
+                    this.scaleAnim(1.1);
 
-                    temp.increased = true;
+                    temp.end = true;
                 }
 
-                if (temp.time * app.ticker.deltaTime < 5){
+                let delta = app.ticker.deltaTime;
 
-                    viewport.zoom(easeInOutQuint(1) * this.scale.x * 25 * app.ticker.deltaTime, true);
-                    temp.time++;
+                if (temp.time < 15){
+
+                    viewport.zoomPercent(-0.08 * easeInOutQuint(1) * delta / 15, true)
+                    temp.time = temp.time + 1 * delta;
                 }
             }
         }

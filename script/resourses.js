@@ -1,4 +1,5 @@
-import {app, game, scene, sceneMask} from "./app.js";
+import {app, game} from "./app.js";
+import {scene, sceneMask} from "./camera.js";
 
 //Add sprite by config and return
 export function getSpriteByConfig(config){
@@ -62,7 +63,7 @@ function addHitBox(config){
         y: 0,
         width: 0,
         height: 0,
-        show: true
+        show: false
     }, config);
 
     let sprite = config.sprite;
@@ -100,8 +101,10 @@ function randomColor(){
 }
 
 function randomArea(radius){
+
     let theta = Math.random() * 2 * Math.PI,
         rX = Math.sqrt(Math.random()) * radius.x,
         rY = Math.sqrt(Math.random()) * radius.y
+
     return {x: rX * Math.cos(theta), y: rY * Math.sin(theta)}
 }

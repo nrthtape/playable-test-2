@@ -1,6 +1,7 @@
 import {getSpriteByConfig} from "./resourses.js";
-import {game, scene} from "./app.js";
-import {cityGroup} from "./start.js";
+import {game} from "./app.js";
+import {cityGroup} from "./display.js";
+import {scene} from "./camera.js";
 
 let pump;
 

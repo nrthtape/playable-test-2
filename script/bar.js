@@ -1,8 +1,9 @@
-import {app, viewport, scene} from "./app.js";
+import {app} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {uiGroup} from "./start.js";
+import {viewport, uiGroup} from "./display.js";
 import {player} from "./player.js";
 import {resizeGame} from "./resize.js";
+import {scene} from "./camera.js";
 
 export class Bar extends PIXI.Container{
 
@@ -122,14 +123,14 @@ export class Bar extends PIXI.Container{
 
     progress(value){
 
-        this._percents.text = " " + value + "%";
-        this._fill.x = -this._fill.width + this._fill.width / 100 * value;
+        this._percents.text = " " + Math.floor(value / 5) + "%";
+        this._fill.x = -this._fill.width + this._fill.width / 100 * value / 5;
 
         for (let i = 1; i <= this._stars.children.length; i++){
 
             let star = this._stars.children[i - 1];
 
-            if (value >= 20 * i){
+            if (Math.floor(value / 5) >= 20 * i){
 
                 if (!star.catched){
 

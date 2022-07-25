@@ -1,11 +1,46 @@
-import {app, game, camera, scene} from "./app.js";
+import {app, game} from "./app.js";
 import {player} from "./player.js";
+import {bgGroup, viewport} from "./display.js";
 
 let cameraAngle = 0,
     cameraSpeed = 0,
     offsetX = 0,
     offsetY = 0,
     maxDiff = 100
+
+export let camera, scene, sceneRect, sceneMask;
+
+export function initCamera(){
+
+    scene = new PIXI.Container();
+
+    sceneRect = new PIXI.Graphics();
+    sceneRect.beginFill(0x4cc0cd);
+    sceneRect.drawRect((game.width - game.worldWidth) / 2, (game.height - game.worldHeight) / 2, game.worldWidth, game.worldHeight);
+    sceneRect.endFill();
+    sceneRect.parentGroup = bgGroup;
+
+    scene.addChild(sceneRect);
+    viewport.addChild(scene);
+
+    sceneMask = new PIXI.Graphics();
+    sceneMask.beginFill(0x4cc0cd);
+    sceneMask.drawRect((game.width - game.worldWidth) / 2, (game.height - game.worldHeight) / 2, game.worldWidth, game.worldHeight);
+    sceneMask.endFill();
+
+    scene.addChild(sceneMask);
+
+    camera = new PIXI.Container();
+
+    const cameraRect = new PIXI.Graphics();
+    cameraRect.beginFill(0x4cc0cd);
+    cameraRect.drawRect((game.width - game.worldWidth) / 2, (game.height - game.worldHeight) / 2, game.worldWidth, game.worldHeight);
+    cameraRect.endFill();
+    cameraRect.alpha = 0;
+
+    camera.addChild(cameraRect);
+    app.stage.addChild(camera);
+}
 
 export function cameraMove(delta){
 
@@ -25,8 +60,8 @@ export function cameraMove(delta){
 
     if (cameraSpeed !== 0) {
 
-        let tempX = game.worldWidth / 2 - (player.cat.hitBox.width) * player.scale.x / 2,
-            tempY = game.worldHeight / 2 - (player.cat.hitBox.height - 15) * player.scale.y / 2
+        let tempX = game.worldWidth / 2,
+            tempY = game.worldHeight / 2
 
         if (scene.x > tempX) {
 

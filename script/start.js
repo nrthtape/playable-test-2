@@ -1,38 +1,24 @@
-import {app, game, sceneRect, scene, camera, viewport} from "./app.js";
+import {app, game} from "./app.js";
 import {resizeGame} from "./resize.js";
-import {getSpriteByConfig} from "./resourses.js";
 import {player, initPlayer} from "./player.js";
 import {Bar} from "./bar.js";
-import {cameraMove, subscribe} from "./camera.js";
+import {cameraMove, subscribe, initCamera, camera, scene} from "./camera.js";
 import {initCity} from "./city.js";
 import {initRoad} from "./road.js";
+import {initDisplay, viewport, bgGroup} from "./display.js";
 
 //Declare variables for images
 export let  car, car_count,
             bar,
-            style,
-            grid,
-            uiGroup, flyingGroup, bgGroup, cityGroup, playerGroup
+            style
 
 
 //Setup images and add them to stage
 export function setup(){
 
-    uiGroup = new PIXI.display.Group(2, false);
-    flyingGroup = new PIXI.display.Group(1, true);
-    playerGroup = new PIXI.display.Group(-1, false);
-    bgGroup = new PIXI.display.Group(-2, false);
-    cityGroup = new PIXI.display.Group(0, (sprite) => {
-        sprite.zOrder = sprite.y;
-    });
+    initDisplay();
+    initCamera();
 
-    app.stage.addChild(new PIXI.display.Layer(cityGroup));
-    app.stage.addChild(new PIXI.display.Layer(uiGroup));
-    app.stage.addChild(new PIXI.display.Layer(flyingGroup));
-    app.stage.addChild(new PIXI.display.Layer(playerGroup));
-    app.stage.addChild(new PIXI.display.Layer(bgGroup));
-
-    sceneRect.parentGroup = bgGroup;
 
     bar = new Bar();
     bar.progress(0);
@@ -58,8 +44,8 @@ export function start(){
 
 export function gameLoop(delta){
 
-    bar.progress(Math.round(player.score));
-    player.grow(Math.round(player.score));
+    bar.progress(player.score);
+    player.grow(player.score);
 
     cameraMove(delta);
 

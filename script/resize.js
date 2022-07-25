@@ -1,4 +1,6 @@
-import {app, game, scene, viewport} from "./app.js";
+import {app, game} from "./app.js";
+import {scene} from "./camera.js";
+import {viewport} from "./display.js";
 
 //Fits game content to the browser window
 export function resizeGame(){
