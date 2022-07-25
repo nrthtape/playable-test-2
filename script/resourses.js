@@ -108,3 +108,24 @@ function randomArea(radius){
 
     return {x: rX * Math.cos(theta), y: rY * Math.sin(theta)}
 }
+
+export function addTween(config){
+
+    config = Object.assign({
+        delay: 0,
+        time: 500,
+        easing: PIXI.tween.Easing.inOutSine()
+    }, config);
+
+    const tween = PIXI.tweenManager.createTween(config.sprite);
+
+    tween.from(config.from);
+    tween.to(config.to);
+    tween.delay = config.delay;
+    tween.time = config.time;
+    tween.easing = config.easing;
+    tween.start();
+    tween.on("end", function(){
+        tween.remove();
+    })
+}

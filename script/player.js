@@ -1,5 +1,5 @@
 import {app, game} from "./app.js";
-import {getSpriteByConfig} from "./resourses.js";
+import {addTween, getSpriteByConfig} from "./resourses.js";
 import {viewport, playerGroup, uiGroup} from "./display.js";
 import {camera, scene} from "./camera.js";
 
@@ -30,7 +30,7 @@ export class Player extends PIXI.Container{
 
         this._grow = [];
 
-        for (let i = 0; i < 20; i++){
+        for (let i = 0; i < 10; i++){
 
             this._grow.push({end: false, time: 0});
         }
@@ -105,14 +105,14 @@ export class Player extends PIXI.Container{
                 food.width -= food.texture.width / minDist * delta * scaleSpeed;
                 food.height -= food.texture.height / minDist * delta * scaleSpeed;
 
-                // if (food.random > 0.5 * this.scale.x){
-                //
-                //     food.angle += angleSpeed;
-                // }
-                // else{
-                //
-                //     food.angle -= angleSpeed;
-                // }
+                if (food.random > 0.5 * this.scale.x){
+
+                    food.angle += angleSpeed;
+                }
+                else{
+
+                    food.angle -= angleSpeed;
+                }
             }
             else{
 
@@ -146,7 +146,7 @@ export class Player extends PIXI.Container{
 
             let temp = this._grow[i - 1];
 
-            if (value >= 5 * i){
+            if (value >= 10 * i){
 
                 if (!temp.end){
 
