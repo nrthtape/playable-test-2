@@ -1,43 +1,33 @@
 import {app, game} from "./app.js";
 import {resizeGame} from "./resize.js";
 import {player, initPlayer} from "./player.js";
-import {Bar} from "./bar.js";
-import {cameraMove, subscribe, initCamera, camera, scene} from "./camera.js";
+import {initBar, bar} from "./bar.js";
+import {cameraMove, initCamera, camera} from "./camera.js";
 import {initCity} from "./city.js";
-import {initRoad} from "./road.js";
-import {initDisplay, viewport, bgGroup} from "./display.js";
+import {initMap, scene} from "./map.js";
+import {initDisplay} from "./display.js";
 
-//Declare variables for images
-export let  car, car_count,
-            bar,
-            style
-
-
-//Setup images and add them to stage
-export function setup(){
+//This function will run when the image has loaded
+export function start() {
 
     initDisplay();
+
     initCamera();
 
-
-    bar = new Bar();
-    bar.progress(0);
-
-    app.stage.addChild(bar);
-
-    initPlayer({x: game.worldWidth / 2 - 1000, y: game.worldHeight / 2});
+    initMap();
 
     initCity();
 
-    initRoad();
-}
+    initPlayer({
+        // x: 1035,
+        // y: 1950
+        x: 1800,
+        y: 800
+    });
 
-//This function will run when the image has loaded
-export function start(){
+    initBar();
 
     resizeGame();
-
-    subscribe(camera);
 
     app.ticker.add(gameLoop);
 }
@@ -57,13 +47,13 @@ export function gameLoop(delta){
         if (food.food){
 
             if (
-                rectIntersect(player.cat, food) &&
-                compareSize(player.cat, food)
+                (rectIntersect(player.cat.hitBox, food.hitBox) ||
+                rectIntersect(player.vacuum.hitBox, food.hitBox)) &&
+                compareSize(player.cat.hitBox, food.hitBox)
             ){
 
                 if (!food.catched){
 
-                    // PIXI.sound.play("swish");
                     food.catched = true;
                 }
             }
@@ -80,16 +70,11 @@ export function gameLoop(delta){
     PIXI.tweenManager.update();
 }
 
-window.onresize = function(){
-
-    resizeGame();
-}
-
 // Check intersect between two objects
-function rectIntersect(a, b){
+export function rectIntersect(a, b){
 
-    let aBox = a.hitBox.getBounds();
-    let bBox = b.hitBox.getBounds();
+    let aBox = a.getBounds();
+    let bBox = b.getBounds();
 
     return  aBox.x + aBox.width > bBox.x &&
             aBox.x < bBox.x + bBox.width &&
@@ -100,11 +85,11 @@ function rectIntersect(a, b){
 // Return true if A width larger B
 function compareSize(a, b){
 
-    let aBox = a.hitBox.getBounds();
-    let bBox = b.hitBox.getBounds();
+    let aBox = a.getBounds();
+    let bBox = b.getBounds();
 
     return  aBox.width > bBox.width ||
+            aBox.height > bBox.height ||
             aBox.width > bBox.height ||
-            aBox.height > bBox.width ||
-            aBox.height > bBox.height
+            aBox.height > bBox.width
 }

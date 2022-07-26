@@ -1,11 +1,11 @@
-import {start, setup} from "./start.js";
+import {start} from "./start.js";
 
 //Set the game options
 export let game = {
-    width: 1080,
-    height: 1920,
-    // width: 4320,
-    // height: 3500,
+    // width: 1080,
+    // height: 1920,
+    width: 4320,
+    height: 3500,
     worldWidth: 4320,
     worldHeight: 3500,
     element: document.body
@@ -16,7 +16,6 @@ export const app = new PIXI.Application({
     width: game.width,             // default: 800
     height: game.height,            // default: 600
     antialias: true,                // default: false
-    transparent: false,             // default: false
     roundPixels: true,
     resolution: 1,
     // backgroundColor: 0x4cc0cd,
@@ -35,8 +34,7 @@ PIXI.Loader.shared
     .add("tap2", "sound/tap2.mp3")
     .add("swish", "sound/swish.mp3")
     .add("star", "sound/star.mp3")
-    .load(setup)
-    .onComplete.add(start)
+    .load(start)
 
 
 

@@ -1,9 +1,6 @@
-import {app} from "./app.js";
 import {getSpriteByConfig} from "./resourses.js";
-import {viewport, uiGroup} from "./display.js";
-import {player} from "./player.js";
-import {resizeGame} from "./resize.js";
-import {scene} from "./camera.js";
+import {uiGroup} from "./display.js";
+import {app} from "./app.js";
 
 export class Bar extends PIXI.Container{
 
@@ -142,4 +139,14 @@ export class Bar extends PIXI.Container{
             }
         }
     }
+}
+
+export let bar;
+
+export function initBar(){
+
+    bar = new Bar();
+    bar.progress(0);
+
+    app.stage.addChild(bar);
 }

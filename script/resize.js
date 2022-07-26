@@ -1,35 +1,44 @@
 import {app, game} from "./app.js";
-import {scene} from "./camera.js";
+import {player} from "./player.js";
+import {scene} from "./map.js";
 import {viewport} from "./display.js";
 
 //Fits game content to the browser window
 export function resizeGame(){
 
+    let gameW,
+        gameH
+
+    gameW = game.width;
+    gameH = game.height;
+
     // if (window.innerWidth < window.innerHeight) {
     //
-    //     game.width = game.w;
-    //     game.height = game.h;
+    //     gameW = game.width;
+    //     gameH = game.height;
     // }
     // else{
     //
-    //     game.width = game.h;
-    //     game.height = game.w;
+    //     gameW = game.height;
+    //     gameH = game.width;
     // }
 
     const w = Math.max(window.innerWidth, game.element.clientWidth);
     const h = Math.max(window.innerHeight, game.element.clientHeight);
 
     const scaleFactor = Math.min(
-        w / game.width,
-        h / game.height
+        w / gameW,
+        h / gameH
     );
 
-    const newWidth = Math.ceil(game.width * scaleFactor);
-    const newHeight = Math.ceil(game.height * scaleFactor);
+    const newWidth = Math.ceil(gameW * scaleFactor);
+    const newHeight = Math.ceil(gameH * scaleFactor);
 
     app.renderer.resize(newWidth, newHeight);
     app.stage.scale.set(scaleFactor);
+}
 
-    // player.x = game.width / 2 - scene.x;
-    // player.y = game.height / 2 - scene.y;
+window.onresize = function(){
+
+    resizeGame();
 }

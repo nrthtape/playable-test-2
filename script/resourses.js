@@ -1,5 +1,5 @@
 import {app, game} from "./app.js";
-import {scene, sceneMask} from "./camera.js";
+import {scene, sceneMask} from "./map.js";
 
 //Add sprite by config and return
 export function getSpriteByConfig(config){
@@ -10,11 +10,9 @@ export function getSpriteByConfig(config){
         x: 0,
         y: 0,
         angle: 0,
-        anchor: [0.5, 0.5],
+        anchor: 0.5,
         scale: 1,
         score: 1,
-        mask: false,
-        player: false,
         food: true,
         hitBox: {custom: false}
     }, config);
@@ -25,8 +23,7 @@ export function getSpriteByConfig(config){
 
     sprite.x = config.x;
     sprite.y = config.y;
-    sprite.anchor.x = config.anchor[0];
-    sprite.anchor.y = config.anchor[1];
+    sprite.anchor.set(config.anchor);
     sprite.mask = config.mask;
     sprite.angle = config.angle;
     sprite.scale.set(config.scale);
@@ -44,8 +41,6 @@ export function getSpriteByConfig(config){
     sprite.hitBox = addHitBox(config.hitBox);
 
     if (config.parent === scene){
-
-        sprite.mask = sceneMask;
 
         sprite.x += (game.width - game.worldWidth) / 2;
         sprite.y += (game.height - game.worldHeight) / 2;
@@ -83,7 +78,7 @@ function addHitBox(config){
 
     if (config.show){
 
-        box.alpha = 0.5;
+        box.alpha = 0.75;
     }
     else{
 
@@ -128,4 +123,34 @@ export function addTween(config){
     tween.on("end", function(){
         tween.remove();
     })
+}
+
+export function addRect(config){
+
+    config = Object.assign({
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+        color: 0xff0000,
+        visible: true,
+        alpha: 1
+    }, config);
+
+    const rect = new PIXI.Graphics();
+    rect.beginFill(config.color);
+    rect.drawRect(config.x, config.y, config.width, config.height);
+    rect.endFill();
+    rect.parentGroup = config.group;
+    rect.visible = config.visible;
+    rect.alpha = config.alpha;
+
+    config.parent.addChild(rect);
+
+    return rect;
+}
+
+export function addText(config){
+
+
 }
