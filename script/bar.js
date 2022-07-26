@@ -123,14 +123,14 @@ export class Bar extends PIXI.Container{
 
         console.log(getMaxScore());
 
-        this._percents.text = " " + Math.floor(value / 303 / 100) + "%";
-        this._fill.x = -this._fill.width + this._fill.width / 100 * value / 303 / 100;
+        this._percents.text = " " + Math.floor(value / (304 / 100)) + "%";
+        this._fill.x = -this._fill.width + this._fill.width / 100 * value / (304 / 100);
 
         for (let i = 1; i <= this._stars.children.length; i++){
 
             let star = this._stars.children[i - 1];
 
-            if (Math.floor(value / 303 / 100) >= 20 * i){
+            if (Math.floor(value / (304 / 100)) >= 20 * i){
 
                 if (!star.catched){
 
