@@ -2,10 +2,10 @@ import {start} from "./start.js";
 
 //Set the game options
 export let game = {
-    // width: 1080,
-    // height: 1920,
-    width: 4320,
-    height: 3500,
+    width: 1080,
+    height: 1920,
+    // width: 4320,
+    // height: 3500,
     worldWidth: 4320,
     worldHeight: 3500,
     element: document.body
@@ -18,7 +18,7 @@ export const app = new PIXI.Application({
     antialias: true,                // default: false
     roundPixels: true,
     resolution: 1,
-    // backgroundColor: 0x4cc0cd,
+    backgroundColor: 0x4cc0cd,
     autoResize: true
 });
 

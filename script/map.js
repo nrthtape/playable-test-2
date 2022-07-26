@@ -70,7 +70,7 @@ function buildRoad(config){
     for (let i = 0; i < config.length; i++){
 
         let tile = getSpriteByConfig({
-            name: "road_tile",
+            name: "road",
             parent: road,
             food: false
         })

@@ -19,10 +19,8 @@ export function start() {
     initCity();
 
     initPlayer({
-        // x: 1035,
-        // y: 1950
-        x: 1800,
-        y: 800
+        x: 1035,
+        y: 1950
     });
 
     initBar();

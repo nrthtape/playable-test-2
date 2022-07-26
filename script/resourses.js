@@ -14,7 +14,8 @@ export function getSpriteByConfig(config){
         scale: 1,
         score: 1,
         food: true,
-        hitBox: {custom: false}
+        hitBox: {custom: false},
+        load: true
     }, config);
 
     const atlas = PIXI.Loader.shared.resources["atlas"].textures;
@@ -46,7 +47,10 @@ export function getSpriteByConfig(config){
         sprite.y += (game.height - game.worldHeight) / 2;
     }
 
-    config.parent.addChild(sprite);
+    if (config.load){
+
+        config.parent.addChild(sprite);
+    }
 
     return sprite;
 }

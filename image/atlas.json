@@ -272,7 +272,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":327,"h":497},
 	"sourceSize": {"w":327,"h":497}
 },
-"road_tile.png":
+"road.png":
 {
 	"frame": {"x":1,"y":1400,"w":296,"h":340},
 	"rotated": false,

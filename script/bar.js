@@ -1,6 +1,7 @@
 import {getSpriteByConfig} from "./resourses.js";
 import {uiGroup} from "./display.js";
 import {app} from "./app.js";
+import {getMaxScore} from "./city.js";
 
 export class Bar extends PIXI.Container{
 
@@ -120,14 +121,16 @@ export class Bar extends PIXI.Container{
 
     progress(value){
 
-        this._percents.text = " " + Math.floor(value / 5) + "%";
-        this._fill.x = -this._fill.width + this._fill.width / 100 * value / 5;
+        console.log(getMaxScore());
+
+        this._percents.text = " " + Math.floor(value / 303 / 100) + "%";
+        this._fill.x = -this._fill.width + this._fill.width / 100 * value / 303 / 100;
 
         for (let i = 1; i <= this._stars.children.length; i++){
 
             let star = this._stars.children[i - 1];
 
-            if (Math.floor(value / 5) >= 20 * i){
+            if (Math.floor(value / 303 / 100) >= 20 * i){
 
                 if (!star.catched){
 

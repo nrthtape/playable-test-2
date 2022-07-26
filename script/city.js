@@ -189,21 +189,29 @@ export function initCity(){
     })
 
     // crystal
-    addObject({
+    // addObject({
+    //     name: "crystal",
+    //     place: [
+    //         {x: 805, y: 1530},
+    //         {x: 880, y: 1560},
+    //         {x: 990, y: 1520},
+    //         {x: 965, y: 1635},
+    //         {x: 785, y: 1795},
+    //         {x: 2565, y: 1835}
+    //     ]
+    // })
+
+    addObjectByRandom({
         name: "crystal",
-        place: [
-            {x: 805, y: 1530},
-            {x: 880, y: 1560},
-            {x: 990, y: 1520},
-            {x: 965, y: 1635},
-            {x: 785, y: 1795},
-            {x: 2565, y: 1835}
-        ]
-    })
+        count: 100
+    });
 
-    addGrass(100);
+    addObjectByRandom({
+        name: "grass",
+        count: 100
+    });
 
-    // grass
+    // // grass
     // addObject({
     //     name: "grass",
     //     place: [
@@ -279,53 +287,53 @@ export function initCity(){
         length: 3
     })
 
-    // fish
-    addObject(
-        {
-            name: "fish_cookie",
-            count: 100
-        }
-    )
-
-    // fish_yellow
-    addObject(
-        {
-            name: "fish_yellow",
-            count: 10
-        }
-    )
-
-    // fish_orange
-    addObject(
-        {
-            name: "fish_orange",
-            count: 10
-        }
-    )
-
-    // diver
-    addObject(
-        {
-            name: "diver",
-            count: 1
-        }
-    )
-
-    // crab
-    addObject(
-        {
-            name: "crab",
-            count: 25
-        }
-    )
-
-    // crab_evil
-    addObject(
-        {
-            name: "crab_evil",
-            count: 25
-        }
-    )
+    // // fish
+    // addObject(
+    //     {
+    //         name: "fish_cookie",
+    //         count: 100
+    //     }
+    // )
+    //
+    // // fish_yellow
+    // addObject(
+    //     {
+    //         name: "fish_yellow",
+    //         count: 10
+    //     }
+    // )
+    //
+    // // fish_orange
+    // addObject(
+    //     {
+    //         name: "fish_orange",
+    //         count: 10
+    //     }
+    // )
+    //
+    // // diver
+    // addObject(
+    //     {
+    //         name: "diver",
+    //         count: 1
+    //     }
+    // )
+    //
+    // // crab
+    // addObject(
+    //     {
+    //         name: "crab",
+    //         count: 25
+    //     }
+    // )
+    //
+    // // crab_evil
+    // addObject(
+    //     {
+    //         name: "crab_evil",
+    //         count: 25
+    //     }
+    // )
 }
 
 // добавляет статичные спрайты
@@ -442,39 +450,85 @@ function addFence(config){
     }
 }
 
-// добавляет траву
-function addGrass(count){
+// добавляет спрайт в случайном месте (генерация)
+function addObjectByRandom(config){
 
-    for (let i = 0; i < count; i++){
+    config = Object.assign({
+        score: 1,
+        scale: "random",
+        hitBox: {custom: false},
+        count: 1,
+        ignoreRoad: true,
+        ignoreFood: true
+    }, config);
 
-        let tile = getSpriteByConfig({
-            name: "grass",
-            parent: scene,
-            group: cityGroup
-        })
+    for (let n = 0; n < config.count; n++){
 
-        let x = Math.random() * (game.worldWidth - tile.width) + tile.width / 2,
-            y = Math.random() * (game.worldHeight - tile.height) + tile.height / 2
+        let temp = false;
+        let safe = 0;
 
-        let temp = 0;
+        let point = {
 
-        for (let n = 0; n < scene.children.length; n++){
+            x: Math.random() * game.worldWidth,
+            y: Math.random() * game.worldHeight
+        }
 
-            if (pointIntersect({x: x, y: y}, scene.children[n])){
+        if (config.ignoreRoad){
 
-                temp = 1;
+            for (let i = 0; i < road.children.length; i++){
+
+                if (pointIntersect(point, road.children[i])){
+
+                    temp = true;
+                }
             }
         }
 
-        // if (!temp){
-        //
-        //     tile.x += x;
-        //     tile.y += y;
-        // }
-        // else{
-        //
-        //     i++
-        // }
+        if (config.ignoreFood){
+            for (let i = 0; i < scene.children.length; i++) {
+
+                if (scene.children[i].food) {
+
+                    if (pointIntersect(point, scene.children[i])) {
+
+                        temp = true;
+                    }
+                }
+            }
+        }
+
+        if (!temp){
+
+            let scale;
+
+            if (config.scale === "random"){
+
+                scale = getRandomArbitrary(0.5, 1)
+            }
+            else{
+
+                scale = config.scale
+            }
+
+            let sprite = getSpriteByConfig({
+                name: config.name,
+                parent: scene,
+                score: config.score,
+                group: cityGroup,
+                hitBox: config.hitBox,
+                x: point.x,
+                y: point.y,
+                scale: scale
+            })
+        }
+        else{
+
+            if (safe < 10){
+
+                config.count++
+                safe++;
+            }
+        }
     }
 }
 
@@ -492,4 +546,25 @@ function pointIntersect(point, rect){
         point.x < box.x + box.width &&
         point.y > box.y &&
         point.y < box.y + box.height;
+}
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+export function getMaxScore(){
+
+    let score = 0;
+
+    for (let i = 0; i < scene.children.length; i++){
+
+        let child = scene.children[i];
+
+        if (child.food){
+
+            score += child.score;
+        }
+    }
+
+    return score;
 }
