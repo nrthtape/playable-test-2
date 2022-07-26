@@ -121,8 +121,6 @@ export class Bar extends PIXI.Container{
 
     progress(value){
 
-        console.log(getMaxScore());
-
         this._percents.text = " " + Math.floor(value / (304 / 100)) + "%";
         this._fill.x = -this._fill.width + this._fill.width / 100 * value / (304 / 100);
 

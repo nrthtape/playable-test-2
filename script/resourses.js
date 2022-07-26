@@ -124,9 +124,8 @@ export function addTween(config){
     tween.time = config.time;
     tween.easing = config.easing;
     tween.start();
-    tween.on("end", function(){
-        tween.remove();
-    })
+
+    return tween;
 }
 
 export function addRect(config){

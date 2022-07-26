@@ -93,20 +93,17 @@ export class Player extends PIXI.Container{
 
         this.addChild(text);
 
-        const tween = PIXI.tweenManager.createTween(text);
-
-        tween.to({
-            y: text.y - 250,
-            width: text.width * 1.5,
-            height: text.height * 1.5,
-            alpha: 0
-        });
-        tween.time = 1000;
-        tween.easing = PIXI.tween.Easing.inSine();
-        tween.start();
-        tween.on("end", function (){
-            tween.remove();
-        });
+        addTween({
+            sprite: text,
+            to: {
+                y: text.y - 250,
+                width: text.width * 1.5,
+                height: text.height * 1.5,
+                alpha: 0
+            },
+            time: 1000,
+            easing: PIXI.tween.Easing.inSine()
+        })
     }
 
     eat(food){
@@ -186,6 +183,30 @@ export class Player extends PIXI.Container{
         })
     }
 
+    scaleTextAnim(){
+
+        let sizeUp = getSpriteByConfig({
+            name: "size_up",
+            parent: this,
+            group: uiGroup,
+            y: -175
+        })
+
+        let textAnim = addTween({
+            sprite: sizeUp,
+            to: {
+                y: sizeUp.y - 250,
+                width: sizeUp.width * 1.5,
+                height: sizeUp.height * 1.5,
+                alpha: 0
+            },
+            time: 1000,
+            easing: PIXI.tween.Easing.inSine()
+        })
+
+        return textAnim;
+    }
+
     grow(value){
 
         for (let i = 1; i <= this._grow.length; i++){
@@ -196,14 +217,17 @@ export class Player extends PIXI.Container{
 
                 if (!temp.end){
 
-                    this.scaleAnim(1.1);
+                    this.scaleTextAnim().on("end", function(){
+
+                        player.scaleAnim(1.1);
+                    })
 
                     temp.end = true;
                 }
 
                 let delta = app.ticker.deltaTime;
 
-                if (temp.time < 15){
+                if (temp.time < 15 && temp.end){
 
                     viewport.zoomPercent(-0.08 * easeInOutQuint(1) * delta / 15, true)
                     temp.time = temp.time + 1 * delta;
