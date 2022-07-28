@@ -1,4 +1,6 @@
 import {app, game} from "./app.js";
+import {addRect, addTween} from "./resourses.js";
+import {scene} from "./map.js";
 
 export let viewport
 

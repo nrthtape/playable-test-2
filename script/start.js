@@ -1,14 +1,20 @@
 import {app, game} from "./app.js";
-import {resizeGame} from "./resize.js";
+import {resizeGame, blackout} from "./resize.js";
 import {player, initPlayer} from "./player.js";
 import {initBar, bar} from "./bar.js";
 import {cameraMove, initCamera, camera} from "./camera.js";
 import {initCity} from "./city.js";
 import {initMap, scene} from "./map.js";
-import {initDisplay} from "./display.js";
+import {initDisplay, uiGroup} from "./display.js";
+import {addRect, addTween} from "./resourses.js";
+import {initTutor} from "./tutorial.js";
+import {initChars, moveChars} from "./characters.js";
+
+
+let startGame, stopGame, maxScore;
 
 //This function will run when the image has loaded
-export function start() {
+export function initGame() {
 
     initDisplay();
 
@@ -18,6 +24,8 @@ export function start() {
 
     initCity();
 
+    initChars();
+
     initPlayer({
         x: 1035,
         y: 1950
@@ -25,44 +33,73 @@ export function start() {
 
     initBar();
 
+    // initTutor();
+
     resizeGame();
+
+    maxScore = getMaxScore();
+
+    console.log(maxScore)
+
+    blackout.on("end", function(){
+
+        startGame = true;
+    })
 
     app.ticker.add(gameLoop);
 }
 
 export function gameLoop(delta){
 
-    bar.progress(player.score);
-    player.grow(player.score);
+    moveChars(delta);
 
-    cameraMove(delta);
+    if (startGame){
 
-    // DINNER TIME
-    for (let i = 0; i < scene.children.length; i++){
+        console.log(player.score)
 
-        let food = scene.children[i];
+        bar.progress(player.score, maxScore);
+        player.grow(player.score, maxScore);
 
-        if (food.food){
+        if (bar.getValue > 50){
 
-            if (
-                (rectIntersect(player.cat.hitBox, food.hitBox) ||
-                rectIntersect(player.vacuum.hitBox, food.hitBox)) &&
-                compareSize(player.cat.hitBox, food.hitBox)
-            ){
+            stopGame = true;
+        }
 
-                if (!food.catched){
+        cameraMove(delta);
 
-                    food.catched = true;
+        // DINNER TIME
+        for (let i = 0; i < scene.children.length; i++){
+
+            let food = scene.children[i];
+
+            if (food.food){
+
+                if ((
+                        rectIntersect(player.cat.hitBox, food.hitBox) ||
+                        rectIntersect(player.vacuum.hitBox, food.hitBox)) &&
+                        compareSize(player.cat.hitBox, food.hitBox)
+                        // !stopGame
+                ){
+
+                    if (!food.catched){
+
+                        food.catched = true;
+                    }
+                }
+
+                if (food.catched){
+
+                    food.time += delta;
+
+                    player.eat(food);
                 }
             }
-
-            if (food.catched){
-
-                food.time += delta;
-
-                player.eat(food);
-            }
         }
+    }
+
+    if (stopGame){
+
+        // camera.dragging = false;
     }
 
     PIXI.tweenManager.update();
@@ -86,8 +123,25 @@ function compareSize(a, b){
     let aBox = a.getBounds();
     let bBox = b.getBounds();
 
-    return  aBox.width > bBox.width ||
-            aBox.height > bBox.height ||
-            aBox.width > bBox.height ||
-            aBox.height > bBox.width
+    return  (aBox.width > bBox.width &&
+            aBox.height > bBox.height) ||
+            (aBox.width > bBox.height &&
+            aBox.height > bBox.width)
+}
+
+function getMaxScore(){
+
+    let score = 0;
+
+    for (let i = 0; i < scene.children.length; i++){
+
+        let child = scene.children[i];
+
+        if (child.food){
+
+            score += child.score;
+        }
+    }
+
+    return score;
 }

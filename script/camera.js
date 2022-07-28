@@ -7,7 +7,7 @@ let cameraAngle = 0,
     cameraSpeed = 0,
     offsetX = 0,
     offsetY = 0,
-    maxDiff = 100
+    maxDiff = 150
 
 export let camera, cameraRect;
 

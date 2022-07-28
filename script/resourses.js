@@ -14,8 +14,9 @@ export function getSpriteByConfig(config){
         scale: 1,
         score: 1,
         food: true,
-        hitBox: {custom: false},
-        load: true
+        load: true,
+        speed: 1,
+        hitBox: {}
     }, config);
 
     const atlas = PIXI.Loader.shared.resources["atlas"].textures;
@@ -30,16 +31,44 @@ export function getSpriteByConfig(config){
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
 
+    sprite.name = config.name;
     sprite.score = config.score;
-    sprite.food = config.food;
+
+    if (config.parent === scene){
+
+        sprite.food = config.food;
+    }
+
     sprite.random = Math.random();
     sprite.area = randomArea({x: 25, y: 15});
+    sprite.speed = config.speed;
 
     sprite.time = 0;
 
-    config.hitBox.sprite = sprite;
+    if (sprite.food){
 
-    sprite.hitBox = addHitBox(config.hitBox);
+        // config.hitBox.show = true;
+    }
+
+    // if (config.hitBox){
+
+        config.hitBox.sprite = sprite;
+        sprite.hitBox = addBound(config.hitBox);
+    // }
+    // else{
+    //
+    //     sprite.hitBox = sprite;
+    // }
+
+    if (config.sizeBox){
+
+        config.sizeBox.sprite = sprite;
+        sprite.sizeBox = addBound(config.sizeBox);
+    }
+    else{
+
+        sprite.sizeBox = sprite;
+    }
 
     if (config.parent === scene){
 
@@ -55,13 +84,14 @@ export function getSpriteByConfig(config){
     return sprite;
 }
 
-function addHitBox(config){
+function addBound(config){
 
     config = Object.assign({
         x: 0,
         y: 0,
         width: 0,
         height: 0,
+        custom: false,
         show: false
     }, config);
 
@@ -113,7 +143,11 @@ export function addTween(config){
     config = Object.assign({
         delay: 0,
         time: 500,
-        easing: PIXI.tween.Easing.inOutSine()
+        easing: PIXI.tween.Easing.inOutSine(),
+        loop: false,
+        cycle: false,
+        speed: 1,
+        repeat: 0
     }, config);
 
     const tween = PIXI.tweenManager.createTween(config.sprite);
@@ -122,7 +156,11 @@ export function addTween(config){
     tween.to(config.to);
     tween.delay = config.delay;
     tween.time = config.time;
+    tween.speed = config.speed;
     tween.easing = config.easing;
+    tween.loop = config.loop;
+    tween.pingPong = config.cycle;
+    tween.repeat = config.repeat;
     tween.start();
 
     return tween;

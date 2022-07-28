@@ -1,4 +1,4 @@
-import {start} from "./start.js";
+import {initGame} from "./start.js";
 
 //Set the game options
 export let game = {
@@ -18,7 +18,8 @@ export const app = new PIXI.Application({
     antialias: true,                // default: false
     roundPixels: true,
     resolution: 1,
-    backgroundColor: 0x4cc0cd,
+    // backgroundColor: 0x4cc0cd,
+    backgroundColor: 0x5dd1de,
     autoResize: true
 });
 
@@ -34,7 +35,7 @@ PIXI.Loader.shared
     .add("tap2", "sound/tap2.mp3")
     .add("swish", "sound/swish.mp3")
     .add("star", "sound/star.mp3")
-    .load(start)
+    .load(initGame)
 
 
 

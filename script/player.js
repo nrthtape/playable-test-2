@@ -29,14 +29,14 @@ export class Player extends PIXI.Container{
 
         this._nickname = getSpriteByConfig({
             name: "nickname",
-            parent: this,
+            parent: this._cat,
             group: uiGroup,
             y: -175
         });
 
         this._vacuum = getSpriteByConfig({
             name: "vacuum",
-            parent: this,
+            parent: this._cat,
             group: playerGroup,
             y: -175,
             hitBox: {
@@ -49,7 +49,7 @@ export class Player extends PIXI.Container{
 
         this._grow = [];
 
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < 20; i++){
 
             this._grow.push({end: false, time: 0});
         }
@@ -63,6 +63,11 @@ export class Player extends PIXI.Container{
     get cat(){
 
         return this._cat;
+    }
+
+    get scale(){
+
+        return this._cat.scale;
     }
 
     get score(){
@@ -81,7 +86,7 @@ export class Player extends PIXI.Container{
             new PIXI.TextStyle({
                 fill: "white",
                 fontFamily: "fishdom",
-                fontSize: 70,
+                fontSize: 70 * this.scale.x,
                 stroke: "#0c3278",
                 strokeThickness: 5
             })
@@ -118,36 +123,37 @@ export class Player extends PIXI.Container{
                 scaleSpeed = 3 * this.scale.x,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
 
-        if (!food.tween){
-
-            addTween({
-                sprite: food,
-                to: {
-                    width: food.width * 2,
-                    height: food.height * 2
-                }
-            })
-
-            addTween({
-                sprite: food,
-                to: {
-                    width: food.width,
-                    height: food.height
-                },
-                delay: 100
-            })
-
-            food.tween = true;
-        }
+        // if (!food.tween){
+        //
+        //     addTween({
+        //         sprite: food,
+        //         to: {
+        //             width: food.width * 2,
+        //             height: food.height * 2
+        //         }
+        //     })
+        //
+        //     addTween({
+        //         sprite: food,
+        //         to: {
+        //             width: food.width,
+        //             height: food.height
+        //         },
+        //         delay: 100
+        //     })
+        //
+        //     food.tween = true;
+        // }
 
         food.x = linear(food.x, x, vacuumSpeed);
         food.y = linear(food.y, y, vacuumSpeed);
+        // food.speed = 0;
 
         if (dist < minDist){
 
             vacuumSpeed = 1;
 
-            if (food.scale.x > 0.25){
+            if (Math.abs(food.scale.x) > 0.25){
 
                 food.width -= food.texture.width / minDist * delta * scaleSpeed;
                 food.height -= food.texture.height / minDist * delta * scaleSpeed;
@@ -172,13 +178,13 @@ export class Player extends PIXI.Container{
 
     scaleAnim(size){
 
-        addTween({
-            sprite: this,
+        return addTween({
+            sprite: this._cat,
             to: {
-                width: this.width * size,
-                height: this.height * size
+                width: this._cat.width * size,
+                height: this._cat.height * size
             },
-            time: 1500,
+            time: 2500,
             easing: PIXI.tween.Easing.outElastic(0.4, 0.5)
         })
     }
@@ -189,10 +195,11 @@ export class Player extends PIXI.Container{
             name: "size_up",
             parent: this,
             group: uiGroup,
-            y: -175
+            y: -175,
+            scale: 0.75 * this.scale.x
         })
 
-        let textAnim = addTween({
+        return addTween({
             sprite: sizeUp,
             to: {
                 y: sizeUp.y - 250,
@@ -203,33 +210,30 @@ export class Player extends PIXI.Container{
             time: 1000,
             easing: PIXI.tween.Easing.inSine()
         })
-
-        return textAnim;
     }
 
-    grow(value){
+    grow(value, max){
 
         for (let i = 1; i <= this._grow.length; i++){
 
             let temp = this._grow[i - 1];
 
-            if (value >= 10 * i){
+            if (value >= 100 * i * 5 - 400){
 
                 if (!temp.end){
 
-                    this.scaleTextAnim().on("end", function(){
+                    this.scaleAnim(1.1);
 
-                        player.scaleAnim(1.1);
-                    })
+                    this.scaleTextAnim()
 
                     temp.end = true;
                 }
 
                 let delta = app.ticker.deltaTime;
 
-                if (temp.time < 15 && temp.end){
+                if (temp.time < 30){
 
-                    viewport.zoomPercent(-0.08 * easeInOutQuint(1) * delta / 15, true)
+                    viewport.zoomPercent(-0.05 * easeInOutQuint(1) * delta / 30, true)
                     temp.time = temp.time + 1 * delta;
                 }
             }

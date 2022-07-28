@@ -1,7 +1,10 @@
 import {app, game} from "./app.js";
 import {player} from "./player.js";
 import {scene} from "./map.js";
-import {viewport} from "./display.js";
+import {uiGroup, viewport} from "./display.js";
+import {addRect, addTween} from "./resourses.js";
+
+export let blackout;
 
 //Fits game content to the browser window
 export function resizeGame(){
@@ -36,6 +39,18 @@ export function resizeGame(){
 
     app.renderer.resize(newWidth, newHeight);
     app.stage.scale.set(scaleFactor);
+
+    blackout = addTween({
+        sprite: addRect({
+            parent: app.stage,
+            group: uiGroup,
+            width: game.worldWidth,
+            height: game.worldHeight,
+            color: "black"
+        }),
+        to: {alpha: 0},
+        delay: 500
+    })
 }
 
 window.onresize = function(){

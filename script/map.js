@@ -52,8 +52,8 @@ export function initMap(){
     buildRoad({length: 3, angle: 0, x: 2850, y: 2050});
 
     // horizontal
-    buildRoad({length: 12, angle: 90, y: 2050});
-    buildRoad({length: 9, angle: 90, x: -230, y: 3200});
+    buildRoad({length: 13, angle: 90, y: 2050});
+    buildRoad({length: 9, angle: 90, x: -210, y: 3200});
 }
 
 function buildRoad(config){
