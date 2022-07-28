@@ -101,13 +101,16 @@ export class Player extends PIXI.Container{
         addTween({
             sprite: text,
             to: {
-                y: text.y - 250,
-                width: text.width * 1.5,
-                height: text.height * 1.5,
-                alpha: 0
+                y: text.y - 350 * this.scale.x,
+                // width: text.width * 1.5,
+                // height: text.height * 1.5,
+                alpha: 0.5
             },
             time: 1000,
             easing: PIXI.tween.Easing.inSine()
+        }).on("end", function (){
+
+            text.alpha = 0;
         })
     }
 
@@ -122,28 +125,6 @@ export class Player extends PIXI.Container{
                 scaleRadius = 0,
                 scaleSpeed = 3 * this.scale.x,
                 angleSpeed = 1 / minDist * (minDist - dist) * delta * 2
-
-        // if (!food.tween){
-        //
-        //     addTween({
-        //         sprite: food,
-        //         to: {
-        //             width: food.width * 2,
-        //             height: food.height * 2
-        //         }
-        //     })
-        //
-        //     addTween({
-        //         sprite: food,
-        //         to: {
-        //             width: food.width,
-        //             height: food.height
-        //         },
-        //         delay: 100
-        //     })
-        //
-        //     food.tween = true;
-        // }
 
         food.x = linear(food.x, x, vacuumSpeed);
         food.y = linear(food.y, y, vacuumSpeed);
@@ -202,13 +183,16 @@ export class Player extends PIXI.Container{
         return addTween({
             sprite: sizeUp,
             to: {
-                y: sizeUp.y - 250,
-                width: sizeUp.width * 1.5,
-                height: sizeUp.height * 1.5,
-                alpha: 0
+                y: sizeUp.y - 250 * this.scale.x,
+                // width: sizeUp.width * 1.5,
+                // height: sizeUp.height * 1.5,
+                alpha: 0.5
             },
             time: 1000,
             easing: PIXI.tween.Easing.inSine()
+        }).on("end", function (){
+
+            sizeUp.alpha = 0;
         })
     }
 
@@ -218,13 +202,13 @@ export class Player extends PIXI.Container{
 
             let temp = this._grow[i - 1];
 
-            if (value >= 100 * i * 5 - 400){
+            if (value >= 100 * i * 4 - 300){
 
                 if (!temp.end){
 
                     this.scaleAnim(1.1);
 
-                    this.scaleTextAnim()
+                    this.scaleTextAnim();
 
                     temp.end = true;
                 }
@@ -233,7 +217,7 @@ export class Player extends PIXI.Container{
 
                 if (temp.time < 30){
 
-                    viewport.zoomPercent(-0.05 * easeInOutQuint(1) * delta / 30, true)
+                    viewport.zoomPercent(-0.07 * easeInOutQuint(1) * delta / 30, true)
                     temp.time = temp.time + 1 * delta;
                 }
             }

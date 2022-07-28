@@ -29,7 +29,7 @@ export function initDisplay(){
     app.stage.addChild(new PIXI.display.Layer(flyingGroup));
 
     cityGroup = new PIXI.display.Group(0, (sprite) => {
-        sprite.zOrder = sprite.y;
+        sprite.zOrder = sprite.y + sprite.hitBox.height / 2;
     });
     app.stage.addChild(new PIXI.display.Layer(cityGroup));
 

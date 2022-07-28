@@ -1,4 +1,4 @@
-import {getSpriteByConfig} from "./resourses.js";
+import {addTween, getSpriteByConfig} from "./resourses.js";
 import {uiGroup} from "./display.js";
 import {app} from "./app.js";
 import {scene} from "./map.js";
@@ -107,15 +107,12 @@ export class Bar extends PIXI.Container{
 
         // star.filters = [new PIXI.filters.OutlineFilter(2, 0xffffff)];
 
-        const tween = PIXI.tweenManager.createTween(star);
-
-        tween.from({width: star.width * 1.5, height: star.height * 1.5});
-        tween.to({width: star.width, height: star.height});
-        tween.time = 1500;
-        tween.easing = PIXI.tween.Easing.outElastic(0.4, 0.5);
-        tween.start();
-        tween.on("end", function(){
-            tween.remove();
+        addTween({
+            sprite: star,
+            from: {width: star.width * 1.5, height: star.height * 1.5},
+            to: {width: star.width, height: star.height},
+            time: 1500,
+            easing: PIXI.tween.Easing.outElastic(0.4, 0.5),
         })
     }
 

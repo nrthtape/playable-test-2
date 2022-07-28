@@ -5,13 +5,12 @@ import {initBar, bar} from "./bar.js";
 import {cameraMove, initCamera, camera} from "./camera.js";
 import {initCity} from "./city.js";
 import {initMap, scene} from "./map.js";
-import {initDisplay, uiGroup} from "./display.js";
-import {addRect, addTween} from "./resourses.js";
+import {cityGroup, initDisplay, uiGroup} from "./display.js";
+import {addRect, addTween, getSpriteByConfig} from "./resourses.js";
 import {initTutor} from "./tutorial.js";
 import {initChars, moveChars} from "./characters.js";
 
-
-let startGame, stopGame, maxScore;
+let startGame, stopGame, maxScore = 0;
 
 //This function will run when the image has loaded
 export function initGame() {
@@ -39,8 +38,6 @@ export function initGame() {
 
     maxScore = getMaxScore();
 
-    console.log(maxScore)
-
     blackout.on("end", function(){
 
         startGame = true;
@@ -53,12 +50,15 @@ export function gameLoop(delta){
 
     moveChars(delta);
 
+    if (!startGame){
+
+        bar.progress(0, 1);
+    }
+
     if (startGame){
 
-        console.log(player.score)
-
         bar.progress(player.score, maxScore);
-        player.grow(player.score, maxScore);
+        player.grow(player.score);
 
         if (bar.getValue > 50){
 

@@ -9,19 +9,14 @@ export let blackout;
 //Fits game content to the browser window
 export function resizeGame(){
 
-    let gameW,
-        gameH
-
-    gameW = game.width;
-    gameH = game.height;
+    let gameW = game.width,
+        gameH = game.height
 
     // if (window.innerWidth < window.innerHeight) {
-    //
     //     gameW = game.width;
     //     gameH = game.height;
     // }
     // else{
-    //
     //     gameW = game.height;
     //     gameH = game.width;
     // }

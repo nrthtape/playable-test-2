@@ -308,6 +308,7 @@ export function initCity(){
         name: "fence_h",
         x: 2325,
         y: 750,
+        hitBox: {height: -20},
         scale: 0.9,
         length: 3
     })
@@ -324,6 +325,7 @@ export function initCity(){
         name: "fence_h",
         x: 3400,
         y: 960,
+        hitBox: {height: -20},
         scale: 0.9,
         length: 3
     })
@@ -493,11 +495,12 @@ export function addObjectByRandom(config){
 
     config = Object.assign({
         score: 1,
-        scale: "random",
+        scale: 1,
         hitBox: {custom: false},
         count: 1,
         ignoreRoad: true,
-        ignoreFood: true
+        ignoreFood: true,
+        speed: 1
     }, config);
 
     for (let n = 0; n < config.count; n++){
@@ -566,7 +569,8 @@ export function addObjectByRandom(config){
                 hitBox: config.hitBox,
                 x: point.x,
                 y: point.y,
-                scale: scale
+                scale: scale,
+                speed: config.speed
             })
         }
         else{
@@ -590,6 +594,6 @@ function pointIntersect(point, rect){
         point.y < box.y + box.height;
 }
 
-function getRandomArbitrary(min, max) {
+export function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }

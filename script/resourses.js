@@ -19,9 +19,7 @@ export function getSpriteByConfig(config){
         hitBox: {}
     }, config);
 
-    const atlas = PIXI.Loader.shared.resources["atlas"].textures;
-
-    const sprite = new config.type(atlas[config.name + ".png"]);
+    const sprite = new config.type(getTextureByName(config.name));
 
     sprite.x = config.x;
     sprite.y = config.y;
@@ -82,6 +80,13 @@ export function getSpriteByConfig(config){
     }
 
     return sprite;
+}
+
+export function getTextureByName(name){
+
+    const atlas = PIXI.Loader.shared.resources["atlas"].textures;
+
+    return atlas[name + ".png"];
 }
 
 function addBound(config){
@@ -154,6 +159,7 @@ export function addTween(config){
 
     tween.from(config.from);
     tween.to(config.to);
+    tween.path = config.path;
     tween.delay = config.delay;
     tween.time = config.time;
     tween.speed = config.speed;
