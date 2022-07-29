@@ -11,7 +11,7 @@ import {tutorial, initTutor} from "./tutorial.js";
 import {initChars, moveChars} from "./characters.js";
 import {final, initFinal} from "./final.js";
 
-let startGame, stopGame, maxScore = 0;
+let startGame, tutorEnd, stopGame, maxScore = 0;
 
 //This function will run when the image has loaded
 export function initGame() {
@@ -51,7 +51,11 @@ export function initGame() {
         }
         else{
 
-            tutorial.end()
+            if (!tutorEnd){
+
+                tutorial.end()
+                tutorEnd = true;
+            }
         }
     }
 
@@ -71,12 +75,12 @@ export function gameLoop(delta){
 
     moveChars(delta);
 
-    if (!startGame){
+    if (!tutorEnd){
 
         bar.progress(0, 1);
     }
 
-    if (startGame){
+    if (tutorEnd){
 
         bar.progress(player.score, maxScore);
         player.grow(player.score);
