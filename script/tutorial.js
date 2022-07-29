@@ -184,7 +184,7 @@ export function initTutor(){
 
     tutorial = new Tutorial();
 
-    tutorial.show();
+    // tutorial.show();
 
     app.stage.addChild(tutorial)
 }
