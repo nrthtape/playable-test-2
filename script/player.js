@@ -221,6 +221,7 @@ export class Player extends PIXI.Container{
                     if (!temp.sound){
 
                         PIXI.sound.play("size", {volume: 0.2});
+                        PIXI.sound.play("plim", {volume: 0.5});
                         temp.sound = true;
                     }
 

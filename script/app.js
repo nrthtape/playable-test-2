@@ -34,6 +34,7 @@ PIXI.Loader.shared
     .add("music", "sound/music.mp3")
     .add("tap", "sound/tap.mp3")
     .add("size", "sound/size.mp3")
+    .add("plim", "sound/plim.mp3")
     .add("swish", "sound/swish.mp3")
     .add("star", "sound/star.mp3")
     .add("ok", "sound/ok.mp3")
