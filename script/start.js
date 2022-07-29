@@ -185,13 +185,13 @@ const   detect = new MobileDetect(window.navigator.userAgent),
 function openStore(){
     let href;
     if (os === "iOS"){
-        href = "https://apps.apple.com/RU/app/id1195621598?mt=8";
+        href = "https://apps.apple.com/RU/app/id664575829?mt=8";
     }
     else if (os === "AndroidOS"){
-        href = "https://go.onelink.me/app/e35c91b";
+        href = "https://go.onelink.me/app/23a39e6e";
     }
     else{
-        href = "https://game.playrix.com/homescapes/lp/hs001v1";
+        href = "https://www.playrix.com/ru/games/fishdom";
     }
     window.open(href, "_self");
 }
