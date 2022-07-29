@@ -218,6 +218,12 @@ export class Player extends PIXI.Container{
 
                 if (!temp.end){
 
+                    if (!temp.sound){
+
+                        PIXI.sound.play("size", {volume: 0.2});
+                        temp.sound = true;
+                    }
+
                     this.scaleAnim(1.1);
 
                     this.scaleTextAnim();

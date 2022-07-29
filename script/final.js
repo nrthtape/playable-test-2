@@ -56,7 +56,7 @@ export class Final extends PIXI.Container{
 
     show(){
 
-        PIXI.sound.play("ok", {volume: 1});
+        PIXI.sound.play("ok", {volume: 0.5});
 
         addTween({
             sprite: this._logo,

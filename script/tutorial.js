@@ -76,7 +76,7 @@ export class Tutorial extends PIXI.Container {
         let t4 = addTween({
             sprite: hand,
             to: {x: hand.x, y: hand.y},
-            time: 100,
+            time: 200,
             easing: PIXI.tween.Easing.linear(),
             start: false
         })
