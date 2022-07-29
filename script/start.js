@@ -7,8 +7,9 @@ import {initCity} from "./city.js";
 import {initMap, scene} from "./map.js";
 import {cityGroup, initDisplay, uiGroup} from "./display.js";
 import {addRect, addTween, getSpriteByConfig} from "./resourses.js";
-import {initTutor} from "./tutorial.js";
+import {tutorial, initTutor} from "./tutorial.js";
 import {initChars, moveChars} from "./characters.js";
+import {final, initFinal} from "./final.js";
 
 let startGame, stopGame, maxScore = 0;
 
@@ -32,11 +33,31 @@ export function initGame() {
 
     initBar();
 
-    // initTutor();
+    initTutor();
+
+    initFinal();
 
     resizeGame();
 
+    PIXI.sound.play("music", {loop: true});
+
     maxScore = getMaxScore();
+
+    function screenTouch(){
+
+        if (stopGame){
+
+            openStore();
+        }
+        else{
+
+            tutorial.end()
+        }
+    }
+
+    camera
+        .on("mousedown", screenTouch)
+        .on("touchstart", screenTouch)
 
     blackout.on("end", function(){
 
@@ -77,8 +98,8 @@ export function gameLoop(delta){
                 if ((
                         rectIntersect(player.cat.hitBox, food.hitBox) ||
                         rectIntersect(player.vacuum.hitBox, food.hitBox)) &&
-                        compareSize(player.cat.hitBox, food.hitBox)
-                        // !stopGame
+                        compareSize(player.cat.hitBox, food.hitBox) &&
+                        !stopGame
                 ){
 
                     if (!food.catched){
@@ -99,6 +120,15 @@ export function gameLoop(delta){
 
     if (stopGame){
 
+        if (!final.showed){
+
+            bar.visible = false;
+
+            camera.dragging = false;
+
+            final.show()
+            final.showed = true;
+        }
         // camera.dragging = false;
     }
 
@@ -144,4 +174,24 @@ function getMaxScore(){
     }
 
     return score;
+}
+
+//Check OS
+const   detect = new MobileDetect(window.navigator.userAgent),
+    os = detect.os()
+
+
+//Go to game page depending on OS
+function openStore(){
+    let href;
+    if (os === "iOS"){
+        href = "https://apps.apple.com/RU/app/id1195621598?mt=8";
+    }
+    else if (os === "AndroidOS"){
+        href = "https://go.onelink.me/app/e35c91b";
+    }
+    else{
+        href = "https://game.playrix.com/homescapes/lp/hs001v1";
+    }
+    window.open(href, "_self");
 }

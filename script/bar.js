@@ -1,6 +1,6 @@
 import {addTween, getSpriteByConfig} from "./resourses.js";
 import {uiGroup} from "./display.js";
-import {app} from "./app.js";
+import {app, game} from "./app.js";
 import {scene} from "./map.js";
 
 export class Bar extends PIXI.Container{
@@ -9,18 +9,29 @@ export class Bar extends PIXI.Container{
 
         super();
 
-        this.x = 300;
-        this.y = 180;
+        this._callToAction = getSpriteByConfig({
+            name: "cta_text",
+            parent: this,
+            x: game.width / 2,
+            y: 350,
+            group: uiGroup
+        });
+
+        this._bar = new PIXI.Container();
+        this.addChild(this._bar);
+
+        this._bar.x = 300;
+        this._bar.y = 180;
 
         this._panel = getSpriteByConfig({
             name: "bar_panel",
-            parent: this,
+            parent: this._bar,
             group: uiGroup
         });
 
         this._empty = getSpriteByConfig({
             name: "bar_empty",
-            parent: this,
+            parent: this._bar,
             group: uiGroup
         });
 
@@ -31,13 +42,13 @@ export class Bar extends PIXI.Container{
 
         this._mask = getSpriteByConfig({
             name: "bar_empty",
-            parent: this,
+            parent: this._bar,
             group: uiGroup
         });
 
         this._fill = getSpriteByConfig({
             name: "bar_fill",
-            parent: this,
+            parent: this._bar,
             mask: this._mask,
             group: uiGroup
         });
@@ -53,11 +64,11 @@ export class Bar extends PIXI.Container{
         );
         this._percents.anchor.set(0.5);
         this._percents.parentGroup = uiGroup;
-        this.addChild(this._percents);
+        this._bar.addChild(this._percents);
 
         this._stars = new PIXI.Container();
         this._stars.y = -85;
-        this.addChild(this._stars);
+        this._bar.addChild(this._stars);
 
         for (let i = 0; i < 5; i++){
 

@@ -130,6 +130,12 @@ export class Player extends PIXI.Container{
         food.y = linear(food.y, y, vacuumSpeed);
         // food.speed = 0;
 
+        if (!food.sound1){
+
+            PIXI.sound.play("swish", {volume: 0.2});
+            food.sound1 = true;
+        }
+
         if (dist < minDist){
 
             vacuumSpeed = 1;
@@ -149,6 +155,12 @@ export class Player extends PIXI.Container{
                 }
             }
             else{
+
+                if (!food.sound2){
+
+                    PIXI.sound.play("tap", {volume: 0.2});
+                    food.sound2 = true;
+                }
 
                 this._score += food.score;
                 this.scoreAnim(food);

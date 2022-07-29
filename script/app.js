@@ -31,10 +31,11 @@ game.element.appendChild(app.view);
 //Load an image and run the `setup` function when it's done
 PIXI.Loader.shared
     .add("atlas", "image/atlas.json")
+    .add("music", "sound/music.mp3")
     .add("tap", "sound/tap.mp3")
-    .add("tap2", "sound/tap2.mp3")
     .add("swish", "sound/swish.mp3")
     .add("star", "sound/star.mp3")
+    .add("ok", "sound/ok.mp3")
     .load(initGame)
 
 

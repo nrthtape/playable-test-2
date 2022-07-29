@@ -9,6 +9,8 @@ export function getSpriteByConfig(config){
         parent: app.stage,
         x: 0,
         y: 0,
+        alpha: 1,
+        visible: true,
         angle: 0,
         anchor: 0.5,
         scale: 1,
@@ -28,6 +30,8 @@ export function getSpriteByConfig(config){
     sprite.angle = config.angle;
     sprite.scale.set(config.scale);
     sprite.parentGroup = config.group;
+    sprite.alpha = config.alpha;
+    sprite.visible = config.visible;
 
     sprite.name = config.name;
     sprite.score = config.score;
@@ -152,7 +156,8 @@ export function addTween(config){
         loop: false,
         cycle: false,
         speed: 1,
-        repeat: 0
+        repeat: 0,
+        start: true
     }, config);
 
     const tween = PIXI.tweenManager.createTween(config.sprite);
@@ -167,7 +172,11 @@ export function addTween(config){
     tween.loop = config.loop;
     tween.pingPong = config.cycle;
     tween.repeat = config.repeat;
-    tween.start();
+
+    if (config.start){
+
+        tween.start();
+    }
 
     return tween;
 }

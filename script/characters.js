@@ -38,7 +38,7 @@ export function initChars(){
         count: 20
     })
 
-    //crab
+    //crabs
 
     addCharacter({
         name: "crab_evil",
@@ -46,7 +46,29 @@ export function initChars(){
         score: 30,
         flipW: true,
         speed: getRandomArbitrary(3,4),
-        count: 20
+        count: 10
+    })
+
+    //fish_orange
+
+    addCharacter({
+        name: "fish_orange",
+        hitBox: {y: 30, width: -30, height: -60},
+        score: 30,
+        flipW: true,
+        speed: getRandomArbitrary(3,4),
+        count: 10
+    })
+
+    //diver
+
+    addCharacter({
+        name: "diver",
+        hitBox: {y: 35, width: -100, height: -65},
+        score: 100,
+        flipW: true,
+        speed: getRandomArbitrary(3,4),
+        count: 2
     })
 
     for (let i = 0; i < scene.children.length; i++) {
@@ -89,6 +111,16 @@ export function moveChars(delta){
     moveSprite({
         name: "crab_evil",
         speed: {x: 1, y: 0}
+    });
+
+    moveSprite({
+        name: "fish_orange",
+        speed: {x: 0, y: 1}
+    });
+
+    moveSprite({
+        name: "diver",
+        speed: {x: 1, y: 0.2}
     });
 }
 
@@ -167,24 +199,50 @@ function moveSprite(config){
 
                 if (!char.flipH){
 
-                    if (char.y > world.y){
+                    if (config.speed > 0){
 
-                        char.y -= config.speed.y * char.speed * delta;
+                        if (char.y > world.y){
+
+                            char.y -= config.speed.y * char.speed * delta;
+                        }
+                        else{
+                            char.y = game.worldHeight + world.y;
+                        }
                     }
                     else{
-                        char.y = game.worldHeight + world.y;
+
+                        if (char.y < - world.y + game.height){
+
+                            char.y += config.speed.y * char.speed * delta;
+                        }
+                        else{
+                            char.y = world.y;
+                        }
                     }
                 }
                 else{
 
                     char.scale.y = -1;
 
-                    if (char.y < - world.y + game.height){
+                    if (config.speed > 0){
 
-                        char.y += config.speed.y * char.speed * delta;
+                        if (char.y < - world.y + game.height){
+
+                            char.y += config.speed.y * char.speed * delta;
+                        }
+                        else{
+                            char.y = world.y;
+                        }
                     }
                     else{
-                        char.y = world.y;
+
+                        if (char.y > world.y){
+
+                            char.y -= config.speed.y * char.speed * delta;
+                        }
+                        else{
+                            char.y = game.worldHeight + world.y;
+                        }
                     }
                 }
 

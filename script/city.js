@@ -329,54 +329,6 @@ export function initCity(){
         scale: 0.9,
         length: 3
     })
-
-    // // fish
-    // addObject(
-    //     {
-    //         name: "fish_cookie",
-    //         count: 100
-    //     }
-    // )
-    //
-    // // fish_yellow
-    // addObject(
-    //     {
-    //         name: "fish_yellow",
-    //         count: 10
-    //     }
-    // )
-    //
-    // // fish_orange
-    // addObject(
-    //     {
-    //         name: "fish_orange",
-    //         count: 10
-    //     }
-    // )
-    //
-    // // diver
-    // addObject(
-    //     {
-    //         name: "diver",
-    //         count: 1
-    //     }
-    // )
-    //
-    // // crab
-    // addObject(
-    //     {
-    //         name: "crab",
-    //         count: 25
-    //     }
-    // )
-    //
-    // // crab_evil
-    // addObject(
-    //     {
-    //         name: "crab_evil",
-    //         count: 25
-    //     }
-    // )
 }
 
 // добавляет статичные спрайты
