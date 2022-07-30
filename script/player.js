@@ -47,6 +47,9 @@ export class Player extends PIXI.Container{
             }
         })
 
+        this._scoreAnim = new PIXI.Container();
+        this.addChild(this._scoreAnim);
+
         this._grow = [];
 
         for (let i = 0; i < 20; i++){
@@ -110,7 +113,7 @@ export class Player extends PIXI.Container{
             easing: PIXI.tween.Easing.inSine()
         }).on("end", function (){
 
-            text.alpha = 0;
+            player.removeChild(text);
         })
     }
 
